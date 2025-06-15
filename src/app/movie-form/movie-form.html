@@ -1,0 +1,15 @@
+<label for="name">Film Title: </label>
+<input id="name" type="text" [formControl]="name">
+
+<button (click)="getDetails()">Submit</button>
+
+
+<ul *ngIf="searchResults && searchResults.length > 0">
+    <li *ngFor="let item of searchResults">
+        {{ item.Title }}
+        <div *ngIf='item.Poster && item.Poster !== "N/A" '>
+            <img [src]="item.Poster"/>  
+        </div>
+    </li>
+</ul>
+
