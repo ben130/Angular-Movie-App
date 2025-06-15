@@ -1,4 +1,4 @@
-<label for="name">Film Title: </label>
+<!---<label for="name">Film Title: </label>
 <input id="name" type="text" [formControl]="name">
 
 <button (click)="getDetails()">Submit</button>
@@ -12,4 +12,89 @@
         </div>
     </li>
 </ul>
+-->
+<body>
 
+  <!-- Navigation -->
+  <header class="nav">
+    <div class="logo">🍏</div>
+    <nav>
+      <a href="#">Mac</a>
+      <a href="#">iPhone</a>
+      <a href="#">iPad</a>
+      <a href="#">Support</a>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <h1>Movie & TV Show Database</h1>
+      <div class="input-group">
+        <input id="name" type="text" [formControl]="name" placeholder="Enter Movie/TV Show Title">
+      </div>
+      <!-- <p>The most powerful device we've ever created.</p> -->
+      <button style="margin-top: 15px" class="btn" (click)="getDetails()">Submit</button>
+      <!-- <a href="#" class="btn">Learn More</a> -->
+    </div>
+  </section>
+
+  <!-- Features (Gray Block) -->
+  <section class="section gray">
+    <div class="container">
+      <h2>A curated list of results</h2>
+      <!-- <div class="features">
+        <div class="feature">
+          <h3>Ultra Performance</h3>
+          <p>Equipped with the latest chip to handle anything you throw at it.</p>
+        </div>
+        <div class="feature">
+          <h3>All-day Battery</h3>
+          <p>Power that keeps up with your lifestyle, no matter where you go.</p>
+        </div>
+        <div class="feature">
+          <h3>Pro Camera</h3>
+          <p>Crystal-clear quality in every photo, from daylight to night mode.</p>
+        </div>
+      </div> -->
+      <div class="results" *ngIf="searchResults && searchResults.length > 0">
+        <div *ngFor="let item of searchResults">
+            <p>{{ item.Title }}</p>
+            <div *ngIf='item.Poster && item.Poster !== "N/A" '>
+                <img [src]="item.Poster"/>  
+            </div>
+        </div>
+    </div>
+    </div>
+  </section>
+
+  <!-- Product Showcase -->
+  <section class="section showcase">
+    <div class="container">
+      <img src="https://www.apple.com/v/iphone/home/bo/images/meta/iphone__ky2k6x5u6vue_og.png" alt="Product Image">
+      <h2>Redesigned Inside and Out</h2>
+      <p>Everything you love. Made even better.</p>
+      <a href="#" class="btn secondary">Buy Now</a>
+    </div>
+  </section>
+
+  <!-- Ecosystem (Gray Block) -->
+  <section class="section gray">
+    <div class="container">
+      <h2>It Just Works</h2>
+      <ul class="benefits">
+        <li>Seamless integration across all your Apple devices</li>
+        <li>Privacy and security built in</li>
+        <li>Support that actually supports</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>© 2025 Apple Clone. Inspired by Apple Inc.</p>
+    </div>
+  </footer>
+
+</body>

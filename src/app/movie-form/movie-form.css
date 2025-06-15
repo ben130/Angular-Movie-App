@@ -1,0 +1,186 @@
+/* Reset & Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #1d1d1f;
+    background-color: #fff;
+  }
+  
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  /* Navigation */
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 5%;
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #e5e5e5;
+  }
+  
+  .nav a {
+    margin-left: 20px;
+    font-weight: 500;
+  }
+  
+  /* Hero Section */
+  .hero {
+    padding: 100px 20px;
+    text-align: center;
+    background-color: #fff;
+  }
+  
+  .hero h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+  }
+  
+  .hero p {
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 30px;
+  }
+  
+  .btn {
+    padding: 12px 28px;
+    background-color: #0071e3;
+    color: white;
+    border-radius: 30px;
+    font-weight: 500;
+    font-size: 17px;
+    border: 1px solid;
+  }
+  
+  .btn.secondary {
+    background-color: transparent;
+    color: #0071e3;
+    border: 1px solid #0071e3;
+  }
+  
+  /* Section Base */
+  .section {
+    padding: 80px 20px;
+    text-align: center;
+  }
+  
+  /* Gray Background */
+  .gray {
+    background-color: #f5f5f7;
+  }
+  
+  /* Features */
+  .features {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    margin-top: 40px;
+  }
+  
+  .feature h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+  
+  .feature p {
+    color: #666;
+  }
+  
+  @media (min-width: 768px) {
+    .features {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  }
+  
+  /* Product Showcase */
+  .showcase img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 30px;
+  }
+  
+  .showcase h2 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+  }
+  
+  .showcase p {
+    color: #555;
+    margin-bottom: 25px;
+  }
+  
+  /* Benefits List */
+  .benefits {
+    list-style: none;
+    font-size: 1.1rem;
+    color: #444;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0;
+  }
+  
+  .benefits li {
+    margin-bottom: 15px;
+  }
+  
+  /* Footer */
+  footer {
+    background-color: #fafafa;
+    padding: 40px 0;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #888;
+  }
+  
+  /* Textbox */
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 40px;
+  }
+  
+  .input-group label {
+    font-size: 1rem;
+    margin-bottom: 8px;
+    color: #333;
+  }
+  
+  .input-group input {
+    width: 100%;
+    max-width: 400px;
+    padding: 14px 16px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    background-color: #f5f5f7;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .input-group input:focus {
+    outline: none;
+    border-color: #0071e3;
+    box-shadow: 0 0 0 2px rgba(0, 113, 227, 0.2);
+  }
+  
+  .results {
+    display: flex;
+    margin-top: 15px;
+    font-size: 20px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
