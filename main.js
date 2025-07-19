@@ -44568,21 +44568,21 @@ function MovieForm_div_19_div_1_Template(rf, ctx) {
     \u0275\u0275elementStart(0, "div")(1, "p");
     \u0275\u0275text(2);
     \u0275\u0275elementEnd();
-    \u0275\u0275template(3, MovieForm_div_19_div_1_div_3_Template, 2, 1, "div", 15);
+    \u0275\u0275template(3, MovieForm_div_19_div_1_div_3_Template, 2, 1, "div", 13);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
     const item_r1 = ctx.$implicit;
     \u0275\u0275advance(2);
-    \u0275\u0275textInterpolate(item_r1.title);
+    \u0275\u0275textInterpolate2("", item_r1.title, " - ", item_r1.year);
     \u0275\u0275advance();
     \u0275\u0275property("ngIf", item_r1.thumbnail);
   }
 }
 function MovieForm_div_19_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 13);
-    \u0275\u0275template(1, MovieForm_div_19_div_1_Template, 4, 2, "div", 14);
+    \u0275\u0275elementStart(0, "div", 14);
+    \u0275\u0275template(1, MovieForm_div_19_div_1_Template, 4, 3, "div", 15);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -44591,38 +44591,128 @@ function MovieForm_div_19_Template(rf, ctx) {
     \u0275\u0275property("ngForOf", ctx_r1.searchResults);
   }
 }
+function MovieForm_div_26_div_1_div_5_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div");
+    \u0275\u0275element(1, "img", 16);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const item_r3 = \u0275\u0275nextContext().$implicit;
+    \u0275\u0275advance();
+    \u0275\u0275property("src", item_r3.thumbnail, \u0275\u0275sanitizeUrl);
+  }
+}
+function MovieForm_div_26_div_1_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div")(1, "p");
+    \u0275\u0275text(2);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(3, "p");
+    \u0275\u0275text(4);
+    \u0275\u0275elementEnd();
+    \u0275\u0275template(5, MovieForm_div_26_div_1_div_5_Template, 2, 1, "div", 13);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const item_r3 = ctx.$implicit;
+    \u0275\u0275advance(2);
+    \u0275\u0275textInterpolate2("", item_r3.title, " - ", item_r3.platform);
+    \u0275\u0275advance(2);
+    \u0275\u0275textInterpolate1("Minutes Viewed: ", item_r3.minutes_viewed_billions, " (Billion)");
+    \u0275\u0275advance();
+    \u0275\u0275property("ngIf", item_r3.thumbnail);
+  }
+}
+function MovieForm_div_26_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div", 14);
+    \u0275\u0275template(1, MovieForm_div_26_div_1_Template, 6, 4, "div", 15);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const ctx_r1 = \u0275\u0275nextContext();
+    \u0275\u0275advance();
+    \u0275\u0275property("ngForOf", ctx_r1.topRated);
+  }
+}
+function MovieForm_div_33_div_3_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div");
+    \u0275\u0275element(1, "img", 16);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const ctx_r1 = \u0275\u0275nextContext(2);
+    \u0275\u0275advance();
+    \u0275\u0275property("src", ctx_r1.randomMovie.thumbnail, \u0275\u0275sanitizeUrl);
+  }
+}
+function MovieForm_div_33_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div")(1, "p", 17);
+    \u0275\u0275text(2);
+    \u0275\u0275elementEnd();
+    \u0275\u0275template(3, MovieForm_div_33_div_3_Template, 2, 1, "div", 13);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const ctx_r1 = \u0275\u0275nextContext();
+    \u0275\u0275advance(2);
+    \u0275\u0275textInterpolate2("", ctx_r1.randomMovie.title, " - ", ctx_r1.randomMovie.year);
+    \u0275\u0275advance();
+    \u0275\u0275property("ngIf", ctx_r1.randomMovie.thumbnail);
+  }
+}
 var MovieForm = class _MovieForm {
   http;
   name = new FormControl("");
   searchResults = [];
   movies = [];
+  topRated = [];
+  randomMovie = void 0;
   constructor(http) {
     this.http = http;
   }
   ngOnInit() {
-    console.log(this.name.value);
     this.loadContent();
     this.ngOnChanges();
-  }
-  loadContent() {
-    this.http.get("assets/movies2020.json").subscribe((data) => {
-      this.movies = data;
-    });
-  }
-  getDetails() {
-    this.searchResults = this.name.value ? this.movies.filter((x) => x.title.includes(this.name.value)) : [];
-    console.log(this.movies);
-    console.log(this.searchResults);
   }
   ngOnChanges() {
     this.name.valueChanges.subscribe((x) => {
       console.log(x);
     });
   }
+  loadContent() {
+    this.getMovies();
+    this.getTopRated();
+  }
+  getMovies() {
+    this.getAllMovies().subscribe((data) => {
+      this.movies = data;
+    });
+  }
+  getAllMovies() {
+    const files = ["movies2020.json", "movies-2010s.json", "movies-2000s.json", "movies-1990s.json", "movies-1980s.json"];
+    const requests = files.map((name) => this.http.get(`assets/${name}`));
+    return forkJoin(requests).pipe(map((results) => results.flat()));
+  }
+  getTopRated() {
+    this.http.get("assets/top-rated.json").subscribe((data) => {
+      this.topRated = data;
+    });
+  }
+  search() {
+    this.searchResults = this.name.value ? this.movies.filter((x) => x.title.toLowerCase().includes(this.name.value.toLowerCase())) : [];
+  }
+  getRandomMovie() {
+    const index = Math.floor(Math.random() * this.movies.length);
+    this.randomMovie = this.movies[index];
+  }
   static \u0275fac = function MovieForm_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _MovieForm)(\u0275\u0275directiveInject(HttpClient));
   };
-  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _MovieForm, selectors: [["app-movie-form"]], standalone: false, features: [\u0275\u0275NgOnChangesFeature], decls: 43, vars: 2, consts: [[1, "nav"], [1, "logo"], ["href", "#"], [1, "hero"], [1, "container"], [1, "input-group"], ["id", "name", "type", "text", "placeholder", "Enter Movie/TV Show Title", 3, "formControl"], [1, "btn", 2, "margin-top", "15px", 3, "click"], [1, "section", "gray"], ["class", "results", 4, "ngIf"], [1, "section", "showcase"], ["href", "#", 1, "btn", "secondary"], [1, "benefits"], [1, "results"], [4, "ngFor", "ngForOf"], [4, "ngIf"], [3, "src"]], template: function MovieForm_Template(rf, ctx) {
+  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _MovieForm, selectors: [["app-movie-form"]], standalone: false, features: [\u0275\u0275NgOnChangesFeature], decls: 38, vars: 4, consts: [[1, "nav"], [1, "logo"], ["href", "#"], [1, "hero"], [1, "container"], [1, "input-group"], ["id", "name", "type", "text", "placeholder", "Enter Movie/TV Show Title", 3, "formControl"], [1, "btn", 2, "margin-top", "15px", 3, "click"], [1, "section", "gray"], ["class", "results", 4, "ngIf"], [1, "section", "showcase"], [2, "margin-bottom", "10px"], [1, "btn", "secondary", 2, "margin-bottom", "10px", 3, "click"], [4, "ngIf"], [1, "results"], [4, "ngFor", "ngForOf"], [3, "src"], [2, "font-size", "20px"]], template: function MovieForm_Template(rf, ctx) {
     if (rf & 1) {
       \u0275\u0275elementStart(0, "body")(1, "header", 0)(2, "div", 1);
       \u0275\u0275text(3, "\u{1F34F}");
@@ -44638,9 +44728,9 @@ var MovieForm = class _MovieForm {
       \u0275\u0275elementEnd();
       \u0275\u0275elementStart(13, "button", 7);
       \u0275\u0275listener("click", function MovieForm_Template_button_click_13_listener() {
-        return ctx.getDetails();
+        return ctx.search();
       });
-      \u0275\u0275text(14, "Submit");
+      \u0275\u0275text(14, "Search");
       \u0275\u0275elementEnd()()();
       \u0275\u0275elementStart(15, "section", 8)(16, "div", 4)(17, "h2");
       \u0275\u0275text(18, "A curated list of results");
@@ -44648,28 +44738,26 @@ var MovieForm = class _MovieForm {
       \u0275\u0275template(19, MovieForm_div_19_Template, 2, 1, "div", 9);
       \u0275\u0275elementEnd()();
       \u0275\u0275elementStart(20, "section", 10)(21, "div", 4)(22, "h2");
-      \u0275\u0275text(23, "Redesigned Inside and Out");
+      \u0275\u0275text(23, "Top Rated");
       \u0275\u0275elementEnd();
       \u0275\u0275elementStart(24, "p");
-      \u0275\u0275text(25, "Everything you love. Made even better.");
+      \u0275\u0275text(25, "All Streaming Services");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(26, "a", 11);
-      \u0275\u0275text(27, "Buy Now");
-      \u0275\u0275elementEnd()()();
-      \u0275\u0275elementStart(28, "section", 8)(29, "div", 4)(30, "h2");
-      \u0275\u0275text(31, "It Just Works");
+      \u0275\u0275template(26, MovieForm_div_26_Template, 2, 1, "div", 9);
+      \u0275\u0275elementEnd()();
+      \u0275\u0275elementStart(27, "section", 8)(28, "div", 4)(29, "h2", 11);
+      \u0275\u0275text(30, "Unsure?");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(32, "ul", 12)(33, "li");
-      \u0275\u0275text(34, "Seamless integration across all your Apple devices");
+      \u0275\u0275elementStart(31, "button", 12);
+      \u0275\u0275listener("click", function MovieForm_Template_button_click_31_listener() {
+        return ctx.getRandomMovie();
+      });
+      \u0275\u0275text(32, "Random Suggestion");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(35, "li");
-      \u0275\u0275text(36, "Privacy and security built in");
-      \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(37, "li");
-      \u0275\u0275text(38, "Support that actually supports");
-      \u0275\u0275elementEnd()()()();
-      \u0275\u0275elementStart(39, "footer")(40, "div", 4)(41, "p");
-      \u0275\u0275text(42, "\xA9 2025 Ben130 - Inspired by Apple Inc.");
+      \u0275\u0275template(33, MovieForm_div_33_Template, 4, 3, "div", 13);
+      \u0275\u0275elementEnd()();
+      \u0275\u0275elementStart(34, "footer")(35, "div", 4)(36, "p");
+      \u0275\u0275text(37, "\xA9 2025 Ben130 - Inspired by Apple Inc.");
       \u0275\u0275elementEnd()()()();
     }
     if (rf & 2) {
@@ -44677,6 +44765,10 @@ var MovieForm = class _MovieForm {
       \u0275\u0275property("formControl", ctx.name);
       \u0275\u0275advance(7);
       \u0275\u0275property("ngIf", ctx.searchResults && ctx.searchResults.length > 0);
+      \u0275\u0275advance(7);
+      \u0275\u0275property("ngIf", ctx.topRated && ctx.topRated.length > 0);
+      \u0275\u0275advance(7);
+      \u0275\u0275property("ngIf", ctx.randomMovie);
     }
   }, dependencies: [NgForOf, NgIf, DefaultValueAccessor, NgControlStatus, FormControlDirective], styles: ['\n\n*[_ngcontent-%COMP%] {\n  margin: 0;\n  padding: 0;\n  box-sizing: border-box;\n}\nbody[_ngcontent-%COMP%] {\n  font-family:\n    -apple-system,\n    BlinkMacSystemFont,\n    "Segoe UI",\n    Roboto,\n    Helvetica,\n    Arial,\n    sans-serif;\n  color: #1d1d1f;\n  background-color: #fff;\n}\na[_ngcontent-%COMP%] {\n  text-decoration: none;\n  color: inherit;\n}\n.container[_ngcontent-%COMP%] {\n  width: 90%;\n  max-width: 1200px;\n  margin: 0 auto;\n}\n.nav[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 20px 5%;\n  background-color: #f8f8f8;\n  border-bottom: 1px solid #e5e5e5;\n}\n.nav[_ngcontent-%COMP%]   a[_ngcontent-%COMP%] {\n  margin-left: 20px;\n  font-weight: 500;\n}\n.hero[_ngcontent-%COMP%] {\n  padding: 100px 20px;\n  text-align: center;\n  background-color: #fff;\n}\n.hero[_ngcontent-%COMP%]   h1[_ngcontent-%COMP%] {\n  font-size: 3rem;\n  margin-bottom: 20px;\n}\n.hero[_ngcontent-%COMP%]   p[_ngcontent-%COMP%] {\n  font-size: 1.2rem;\n  color: #555;\n  margin-bottom: 30px;\n}\n.btn[_ngcontent-%COMP%] {\n  padding: 12px 28px;\n  background-color: #0071e3;\n  color: white;\n  border-radius: 30px;\n  font-weight: 500;\n  font-size: 17px;\n  border: 1px solid;\n}\n.btn.secondary[_ngcontent-%COMP%] {\n  background-color: transparent;\n  color: #0071e3;\n  border: 1px solid #0071e3;\n}\n.section[_ngcontent-%COMP%] {\n  padding: 80px 20px;\n  text-align: center;\n}\n.gray[_ngcontent-%COMP%] {\n  background-color: #f5f5f7;\n}\n.features[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 40px;\n  margin-top: 40px;\n}\n.feature[_ngcontent-%COMP%]   h3[_ngcontent-%COMP%] {\n  font-size: 1.5rem;\n  margin-bottom: 10px;\n}\n.feature[_ngcontent-%COMP%]   p[_ngcontent-%COMP%] {\n  color: #666;\n}\n@media (min-width: 768px) {\n  .features[_ngcontent-%COMP%] {\n    flex-direction: row;\n    justify-content: space-between;\n  }\n}\n.showcase[_ngcontent-%COMP%]   img[_ngcontent-%COMP%] {\n  max-width: 100%;\n  height: auto;\n  margin-bottom: 30px;\n}\n.showcase[_ngcontent-%COMP%]   h2[_ngcontent-%COMP%] {\n  font-size: 2rem;\n  margin-bottom: 15px;\n}\n.showcase[_ngcontent-%COMP%]   p[_ngcontent-%COMP%] {\n  color: #555;\n  margin-bottom: 25px;\n}\n.benefits[_ngcontent-%COMP%] {\n  list-style: none;\n  font-size: 1.1rem;\n  color: #444;\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 0;\n}\n.benefits[_ngcontent-%COMP%]   li[_ngcontent-%COMP%] {\n  margin-bottom: 15px;\n}\nfooter[_ngcontent-%COMP%] {\n  background-color: #fafafa;\n  padding: 40px 0;\n  text-align: center;\n  font-size: 0.9rem;\n  color: #888;\n}\n.input-group[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  margin-top: 40px;\n}\n.input-group[_ngcontent-%COMP%]   label[_ngcontent-%COMP%] {\n  font-size: 1rem;\n  margin-bottom: 8px;\n  color: #333;\n}\n.input-group[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  width: 100%;\n  max-width: 400px;\n  padding: 14px 16px;\n  font-size: 1rem;\n  border: 1px solid #ccc;\n  border-radius: 12px;\n  background-color: #f5f5f7;\n  transition: border-color 0.2s ease, box-shadow 0.2s ease;\n}\n.input-group[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus {\n  outline: none;\n  border-color: #0071e3;\n  box-shadow: 0 0 0 2px rgba(0, 113, 227, 0.2);\n}\n.results[_ngcontent-%COMP%] {\n  display: flex;\n  margin-top: 15px;\n  font-size: 20px;\n  flex-wrap: wrap;\n  justify-content: space-between;\n}\n/*# sourceMappingURL=movie-form.css.map */'] });
 };
@@ -44719,7 +44811,7 @@ var MovieForm = class _MovieForm {
         <input id="name" type="text" [formControl]="name" placeholder="Enter Movie/TV Show Title">
       </div>
       <!-- <p>The most powerful device we've ever created.</p> -->
-      <button style="margin-top: 15px" class="btn" (click)="getDetails()">Submit</button>
+      <button style="margin-top: 15px" class="btn" (click)="search()">Search</button>
       <!-- <a href="#" class="btn">Learn More</a> -->
     </div>
   </section>
@@ -44744,7 +44836,7 @@ var MovieForm = class _MovieForm {
       </div> -->
       <div class="results" *ngIf="searchResults && searchResults.length > 0">
         <div *ngFor="let item of searchResults">
-            <p>{{ item.title }}</p>
+            <p>{{ item.title }} - {{ item.year }}</p>
             <div *ngIf='item.thumbnail'>
                 <img [src]="item.thumbnail"/>  
             </div>
@@ -44757,21 +44849,36 @@ var MovieForm = class _MovieForm {
   <section class="section showcase">
     <div class="container">
       <!-- <img src="https://www.apple.com/v/iphone/home/bo/images/meta/iphone__ky2k6x5u6vue_og.png" alt="Product Image"> -->
-      <h2>Redesigned Inside and Out</h2>
-      <p>Everything you love. Made even better.</p>
-      <a href="#" class="btn secondary">Buy Now</a>
+      <h2>Top Rated</h2>
+      <p>All Streaming Services</p>
+      <div class="results" *ngIf="topRated && topRated.length > 0">
+        <div *ngFor="let item of topRated">
+            <p>{{ item.title }} - {{ item.platform }}</p>
+            <p>Minutes Viewed: {{ item.minutes_viewed_billions }} (Billion)</p>
+            <div *ngIf='item.thumbnail'>
+                <img [src]="item.thumbnail"/>  
+            </div>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- Ecosystem (Gray Block) -->
   <section class="section gray">
     <div class="container">
-      <h2>It Just Works</h2>
-      <ul class="benefits">
+      <h2 style="margin-bottom: 10px;">Unsure?</h2>
+      <button class="btn secondary" style="margin-bottom: 10px" (click)="getRandomMovie()">Random Suggestion</button>
+      <!-- <ul class="benefits">
         <li>Seamless integration across all your Apple devices</li>
         <li>Privacy and security built in</li>
         <li>Support that actually supports</li>
-      </ul>
+      </ul> -->
+      <div *ngIf="randomMovie">
+        <p style="font-size: 20px;">{{ randomMovie.title }} - {{ randomMovie.year }}</p>
+        <div *ngIf='randomMovie.thumbnail'>
+            <img [src]="randomMovie.thumbnail"/>  
+        </div>   
+      </div>   
     </div>
   </section>
 
@@ -44787,7 +44894,7 @@ var MovieForm = class _MovieForm {
   }], () => [{ type: HttpClient }], null);
 })();
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(MovieForm, { className: "MovieForm", filePath: "src/app/movie-form/movie-form.ts", lineNumber: 11 });
+  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(MovieForm, { className: "MovieForm", filePath: "src/app/movie-form/movie-form.ts", lineNumber: 13 });
 })();
 
 // src/app/app.ts

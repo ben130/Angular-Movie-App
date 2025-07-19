@@ -1,0 +1,44 @@
+[
+  {
+    "title": "Moana",
+    "platform": "Disney+",
+    "minutes_viewed_billions": 60000,
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/2/26/Moana_Teaser_Poster.jpg"
+  },
+  {
+    "title": "Red Notice",
+    "platform": "Netflix",
+    "minutes_viewed_billions": 21840,
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/0/0c/Red_Notice_-_film_promotional_image.jpg"
+  },
+  {
+    "title": "Don't Look Up",
+    "platform": "Netflix",
+    "minutes_viewed_billions": 21600,
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/5/5c/Don%27t_Look_Up_2021_film.jpg"
+  },
+  {
+    "title": "Bird Box",
+    "platform": "Netflix",
+    "minutes_viewed_billions": 16920,
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/b/bd/Bird_Box_%28film%29.png"
+  },
+  {
+    "title": "Glass Onion: A Knives Out Mystery",
+    "platform": "Netflix",
+    "minutes_viewed_billions": 16800,
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/6/62/Glass_Onion_poster.jpg"
+  },
+  {
+    "title": "Hocus Pocus 2",
+    "platform": "Disney+",
+    "minutes_viewed_billions": 2700,
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/f/f4/Hocus_Pocus_2_Logo.jpg"
+  },
+  {
+    "title": "Moana 2",
+    "platform": "Disney+",
+    "minutes_viewed_billions": 3.9,
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/7/73/Moana_2_poster.jpg"
+  }
+]
