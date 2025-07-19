@@ -34,7 +34,7 @@
         <input id="name" type="text" [formControl]="name" placeholder="Enter Movie/TV Show Title">
       </div>
       <!-- <p>The most powerful device we've ever created.</p> -->
-      <button style="margin-top: 15px" class="btn" (click)="getDetails()">Submit</button>
+      <button style="margin-top: 15px" class="btn" (click)="search()">Search</button>
       <!-- <a href="#" class="btn">Learn More</a> -->
     </div>
   </section>
@@ -59,7 +59,7 @@
       </div> -->
       <div class="results" *ngIf="searchResults && searchResults.length > 0">
         <div *ngFor="let item of searchResults">
-            <p>{{ item.title }}</p>
+            <p>{{ item.title }} - {{ item.year }}</p>
             <div *ngIf='item.thumbnail'>
                 <img [src]="item.thumbnail"/>  
             </div>
@@ -96,10 +96,12 @@
         <li>Privacy and security built in</li>
         <li>Support that actually supports</li>
       </ul> -->
-      <p style="font-size: 20px;">{{ randomMovie.title }}</p>
-      <div *ngIf='randomMovie.thumbnail'>
-          <img [src]="randomMovie.thumbnail"/>  
-      </div>      
+      <div *ngIf="randomMovie">
+        <p style="font-size: 20px;">{{ randomMovie.title }} - {{ randomMovie.year }}</p>
+        <div *ngIf='randomMovie.thumbnail'>
+            <img [src]="randomMovie.thumbnail"/>  
+        </div>   
+      </div>   
     </div>
   </section>
 
