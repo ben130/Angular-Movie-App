@@ -44554,7 +44554,7 @@ var ReactiveFormsModule = class _ReactiveFormsModule {
 function MovieForm_div_19_div_1_div_3_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div");
-    \u0275\u0275element(1, "img", 17);
+    \u0275\u0275element(1, "img", 16);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -44568,7 +44568,7 @@ function MovieForm_div_19_div_1_Template(rf, ctx) {
     \u0275\u0275elementStart(0, "div")(1, "p");
     \u0275\u0275text(2);
     \u0275\u0275elementEnd();
-    \u0275\u0275template(3, MovieForm_div_19_div_1_div_3_Template, 2, 1, "div", 16);
+    \u0275\u0275template(3, MovieForm_div_19_div_1_div_3_Template, 2, 1, "div", 15);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -44581,8 +44581,8 @@ function MovieForm_div_19_div_1_Template(rf, ctx) {
 }
 function MovieForm_div_19_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 14);
-    \u0275\u0275template(1, MovieForm_div_19_div_1_Template, 4, 2, "div", 15);
+    \u0275\u0275elementStart(0, "div", 13);
+    \u0275\u0275template(1, MovieForm_div_19_div_1_Template, 4, 2, "div", 14);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -44622,7 +44622,7 @@ var MovieForm = class _MovieForm {
   static \u0275fac = function MovieForm_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _MovieForm)(\u0275\u0275directiveInject(HttpClient));
   };
-  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _MovieForm, selectors: [["app-movie-form"]], standalone: false, features: [\u0275\u0275NgOnChangesFeature], decls: 44, vars: 2, consts: [[1, "nav"], [1, "logo"], ["href", "#"], [1, "hero"], [1, "container"], [1, "input-group"], ["id", "name", "type", "text", "placeholder", "Enter Movie/TV Show Title", 3, "formControl"], [1, "btn", 2, "margin-top", "15px", 3, "click"], [1, "section", "gray"], ["class", "results", 4, "ngIf"], [1, "section", "showcase"], ["src", "https://www.apple.com/v/iphone/home/bo/images/meta/iphone__ky2k6x5u6vue_og.png", "alt", "Product Image"], ["href", "#", 1, "btn", "secondary"], [1, "benefits"], [1, "results"], [4, "ngFor", "ngForOf"], [4, "ngIf"], [3, "src"]], template: function MovieForm_Template(rf, ctx) {
+  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _MovieForm, selectors: [["app-movie-form"]], standalone: false, features: [\u0275\u0275NgOnChangesFeature], decls: 43, vars: 2, consts: [[1, "nav"], [1, "logo"], ["href", "#"], [1, "hero"], [1, "container"], [1, "input-group"], ["id", "name", "type", "text", "placeholder", "Enter Movie/TV Show Title", 3, "formControl"], [1, "btn", 2, "margin-top", "15px", 3, "click"], [1, "section", "gray"], ["class", "results", 4, "ngIf"], [1, "section", "showcase"], ["href", "#", 1, "btn", "secondary"], [1, "benefits"], [1, "results"], [4, "ngFor", "ngForOf"], [4, "ngIf"], [3, "src"]], template: function MovieForm_Template(rf, ctx) {
     if (rf & 1) {
       \u0275\u0275elementStart(0, "body")(1, "header", 0)(2, "div", 1);
       \u0275\u0275text(3, "\u{1F34F}");
@@ -44647,31 +44647,29 @@ var MovieForm = class _MovieForm {
       \u0275\u0275elementEnd();
       \u0275\u0275template(19, MovieForm_div_19_Template, 2, 1, "div", 9);
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(20, "section", 10)(21, "div", 4);
-      \u0275\u0275element(22, "img", 11);
-      \u0275\u0275elementStart(23, "h2");
-      \u0275\u0275text(24, "Redesigned Inside and Out");
+      \u0275\u0275elementStart(20, "section", 10)(21, "div", 4)(22, "h2");
+      \u0275\u0275text(23, "Redesigned Inside and Out");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(25, "p");
-      \u0275\u0275text(26, "Everything you love. Made even better.");
+      \u0275\u0275elementStart(24, "p");
+      \u0275\u0275text(25, "Everything you love. Made even better.");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(27, "a", 12);
-      \u0275\u0275text(28, "Buy Now");
+      \u0275\u0275elementStart(26, "a", 11);
+      \u0275\u0275text(27, "Buy Now");
       \u0275\u0275elementEnd()()();
-      \u0275\u0275elementStart(29, "section", 8)(30, "div", 4)(31, "h2");
-      \u0275\u0275text(32, "It Just Works");
+      \u0275\u0275elementStart(28, "section", 8)(29, "div", 4)(30, "h2");
+      \u0275\u0275text(31, "It Just Works");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(33, "ul", 13)(34, "li");
-      \u0275\u0275text(35, "Seamless integration across all your Apple devices");
+      \u0275\u0275elementStart(32, "ul", 12)(33, "li");
+      \u0275\u0275text(34, "Seamless integration across all your Apple devices");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(36, "li");
-      \u0275\u0275text(37, "Privacy and security built in");
+      \u0275\u0275elementStart(35, "li");
+      \u0275\u0275text(36, "Privacy and security built in");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(38, "li");
-      \u0275\u0275text(39, "Support that actually supports");
+      \u0275\u0275elementStart(37, "li");
+      \u0275\u0275text(38, "Support that actually supports");
       \u0275\u0275elementEnd()()()();
-      \u0275\u0275elementStart(40, "footer")(41, "div", 4)(42, "p");
-      \u0275\u0275text(43, "\xA9 2025 Apple Clone. Inspired by Apple Inc.");
+      \u0275\u0275elementStart(39, "footer")(40, "div", 4)(41, "p");
+      \u0275\u0275text(42, "\xA9 2025 Ben130 - Inspired by Apple Inc.");
       \u0275\u0275elementEnd()()()();
     }
     if (rf & 2) {
@@ -44758,7 +44756,7 @@ var MovieForm = class _MovieForm {
   <!-- Product Showcase -->
   <section class="section showcase">
     <div class="container">
-      <img src="https://www.apple.com/v/iphone/home/bo/images/meta/iphone__ky2k6x5u6vue_og.png" alt="Product Image">
+      <!-- <img src="https://www.apple.com/v/iphone/home/bo/images/meta/iphone__ky2k6x5u6vue_og.png" alt="Product Image"> -->
       <h2>Redesigned Inside and Out</h2>
       <p>Everything you love. Made even better.</p>
       <a href="#" class="btn secondary">Buy Now</a>
@@ -44780,7 +44778,7 @@ var MovieForm = class _MovieForm {
   <!-- Footer -->
   <footer>
     <div class="container">
-      <p>\xA9 2025 Apple Clone. Inspired by Apple Inc.</p>
+      <p>\xA9 2025 Ben130 - Inspired by Apple Inc.</p>
     </div>
   </footer>
 
