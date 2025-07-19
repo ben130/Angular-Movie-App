@@ -11,29 +11,28 @@ import { FormControl } from '@angular/forms';
 export class MovieForm {
   name: FormControl = new FormControl("");
   searchResults: any[] = [];
+  movies: any[] = [];
 
   constructor(private http: HttpClient) {
     
   }
 
   ngOnInit(){
-    console.log(this.name.value)
-
+    console.log(this.name.value);
+    this.loadContent();
     this.ngOnChanges()
   }
 
-  getDetails() {
-    const apiurl = "https://www.omdbapi.com/?apikey=dfe6d885";
-    console.log(apiurl + "&s=" + this.name.value)
-    this.http.get<any>(apiurl + "&s=" + this.name.value).subscribe((x: any) => {
-      console.log(x)
-      console.log(x.Search)
-      if (x.Response.toLowerCase() == "true") {
-        this.searchResults = x.Search
-        console.log(this.searchResults)
-      }
+  loadContent() {
+    this.http.get('assets/movies2020.json').subscribe((data: any) => {
+      this.movies = data;
+    });
+  }
 
-    })
+  getDetails() {
+    this.searchResults = this.name.value ? this.movies.filter(x => x.title.includes(this.name.value)) : [];
+              console.log(this.movies)
+    console.log(this.searchResults);
   }
 
   ngOnChanges(){

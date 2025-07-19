@@ -19,10 +19,10 @@
   <header class="nav">
     <div class="logo">🍏</div>
     <nav>
-      <a href="#">Mac</a>
-      <a href="#">iPhone</a>
+      <a href="#">Test</a>
+      <!-- <a href="#">iPhone</a>
       <a href="#">iPad</a>
-      <a href="#">Support</a>
+      <a href="#">Support</a> -->
     </nav>
   </header>
 
@@ -59,9 +59,9 @@
       </div> -->
       <div class="results" *ngIf="searchResults && searchResults.length > 0">
         <div *ngFor="let item of searchResults">
-            <p>{{ item.Title }}</p>
-            <div *ngIf='item.Poster && item.Poster !== "N/A" '>
-                <img [src]="item.Poster"/>  
+            <p>{{ item.title }}</p>
+            <div *ngIf='item.thumbnail'>
+                <img [src]="item.thumbnail"/>  
             </div>
         </div>
     </div>
