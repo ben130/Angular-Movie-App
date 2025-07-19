@@ -28,6 +28,7 @@
               "zone.js"
             ],
             "tsConfig": "tsconfig.app.json",
+            "outputPath": "dist/movie-app",
             "assets": [
               "src/assets",
               {
@@ -96,6 +97,9 @@
               "src/styles.css"
             ]
           }
+        },
+        "deploy": {
+          "builder": "angular-cli-ghpages:deploy"
         }
       }
     }

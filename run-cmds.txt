@@ -1,0 +1,6 @@
+--build
+ng build --configuration=development --base-href /Angular-Movie-App/
+
+--deploy
+npx angular-cli-ghpages --dir=dist/movie-app/browser
+
