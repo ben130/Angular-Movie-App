@@ -71,29 +71,42 @@
   <!-- Product Showcase -->
   <section class="section showcase">
     <div class="container">
-      <img src="https://www.apple.com/v/iphone/home/bo/images/meta/iphone__ky2k6x5u6vue_og.png" alt="Product Image">
-      <h2>Redesigned Inside and Out</h2>
-      <p>Everything you love. Made even better.</p>
-      <a href="#" class="btn secondary">Buy Now</a>
+      <!-- <img src="https://www.apple.com/v/iphone/home/bo/images/meta/iphone__ky2k6x5u6vue_og.png" alt="Product Image"> -->
+      <h2>Top Rated</h2>
+      <p>All Streaming Services</p>
+      <div class="results" *ngIf="topRated && topRated.length > 0">
+        <div *ngFor="let item of topRated">
+            <p>{{ item.title }} - {{ item.platform }}</p>
+            <p>Minutes Viewed: {{ item.minutes_viewed_billions }} (Billion)</p>
+            <div *ngIf='item.thumbnail'>
+                <img [src]="item.thumbnail"/>  
+            </div>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- Ecosystem (Gray Block) -->
   <section class="section gray">
     <div class="container">
-      <h2>It Just Works</h2>
-      <ul class="benefits">
+      <h2 style="margin-bottom: 10px;">Unsure?</h2>
+      <button class="btn secondary" style="margin-bottom: 10px" (click)="getRandomMovie()">Random Suggestion</button>
+      <!-- <ul class="benefits">
         <li>Seamless integration across all your Apple devices</li>
         <li>Privacy and security built in</li>
         <li>Support that actually supports</li>
-      </ul>
+      </ul> -->
+      <p style="font-size: 20px;">{{ randomMovie.title }}</p>
+      <div *ngIf='randomMovie.thumbnail'>
+          <img [src]="randomMovie.thumbnail"/>  
+      </div>      
     </div>
   </section>
 
   <!-- Footer -->
   <footer>
     <div class="container">
-      <p>© 2025 Apple Clone. Inspired by Apple Inc.</p>
+      <p>© 2025 Ben130 - Inspired by Apple Inc.</p>
     </div>
   </footer>
 
