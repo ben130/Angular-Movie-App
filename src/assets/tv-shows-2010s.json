@@ -1,0 +1,350 @@
+[
+  {
+    "title": "Breaking Bad",
+    "year": 2008,
+    "cast": [
+      "Bryan Cranston",
+      "Aaron Paul",
+      "Anna Gunn",
+      "RJ Mitte",
+      "Dean Norris",
+      "Betsy Brandt"
+    ],
+    "genres": [
+      "Crime",
+      "Drama",
+      "Thriller"
+    ],
+    "href": "Breaking_Bad",
+    "extract": "Breaking Bad is an American neo-Western crime drama television series created and produced by Vince Gilligan. Set and filmed in Albuquerque, New Mexico, the series follows Walter White, a struggling and depressed high school chemistry teacher who is diagnosed with lung cancer.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/6/61/Breaking_Bad_title_card.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Game of Thrones",
+    "year": 2011,
+    "cast": [
+      "Sean Bean",
+      "Peter Dinklage",
+      "Lena Headey",
+      "Emilia Clarke",
+      "Kit Harington",
+      "Sophie Turner"
+    ],
+    "genres": [
+      "Fantasy",
+      "Drama",
+      "Adventure"
+    ],
+    "href": "Game_of_Thrones",
+    "extract": "Game of Thrones is an American fantasy drama television series created by David Benioff and D. B. Weiss for HBO. It is an adaptation of A Song of Ice and Fire, a series of fantasy novels by George R. R. Martin.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/d/d8/Game_of_Thrones_title_card.jpg",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "The Office",
+    "year": 2005,
+    "cast": [
+      "Steve Carell",
+      "John Krasinski",
+      "Jenna Fischer",
+      "Rainn Wilson",
+      "B. J. Novak",
+      "Mindy Kaling"
+    ],
+    "genres": [
+      "Comedy",
+      "Mockumentary"
+    ],
+    "href": "The_Office_(American_TV_series)",
+    "extract": "The Office is an American mockumentary sitcom television series that depicts the everyday work lives of office employees in the Scranton, Pennsylvania branch of the fictional Dunder Mifflin Paper Company.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/6/63/The_Office_%28U.S._TV_series%29_logo.svg",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "True Detective",
+    "year": 2014,
+    "cast": [
+      "Matthew McConaughey",
+      "Woody Harrelson",
+      "Colin Farrell",
+      "Rachel McAdams",
+      "Mahershala Ali",
+      "Vince Vaughn"
+    ],
+    "genres": [
+      "Crime",
+      "Drama",
+      "Mystery",
+      "Thriller"
+    ],
+    "href": "True_Detective",
+    "extract": "True Detective is an American anthology crime drama television series created and written by Nic Pizzolatto. The series, broadcast by the premium cable network HBO in the United States, premiered on January 12, 2014.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/4/4a/True_Detective_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "The Walking Dead",
+    "year": 2010,
+    "cast": [
+      "Andrew Lincoln",
+      "Norman Reedus",
+      "Melissa McBride",
+      "Lauren Cohan",
+      "Danai Gurira",
+      "Chandler Riggs"
+    ],
+    "genres": [
+      "Horror",
+      "Drama",
+      "Thriller",
+      "Post-apocalyptic"
+    ],
+    "href": "The_Walking_Dead_(TV_series)",
+    "extract": "The Walking Dead is an American post-apocalyptic horror television series based on the comic book series of the same name by Robert Kirkman, Tony Moore, and Charlie Adlard. The series features a large ensemble cast and follows a group of survivors led by former police officer Rick Grimes.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/3/33/The_Walking_Dead_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "House of Cards",
+    "year": 2013,
+    "cast": [
+      "Kevin Spacey",
+      "Robin Wright",
+      "Kate Mara",
+      "Corey Stoll",
+      "Michael Kelly",
+      "Sebastian Arcelus"
+    ],
+    "genres": [
+      "Political drama",
+      "Thriller"
+    ],
+    "href": "House_of_Cards_(American_TV_series)",
+    "extract": "House of Cards is an American political thriller streaming television series created by Beau Willimon. It is an adaptation of the 1990 BBC series of the same name and based on the 1989 novel of the same name by Michael Dobbs.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/9/9a/House_of_Cards_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Orange Is the New Black",
+    "year": 2013,
+    "cast": [
+      "Taylor Schilling",
+      "Laura Prepon",
+      "Michael J. Harney",
+      "Michelle Hurst",
+      "Kate Mulgrew",
+      "Jason Biggs"
+    ],
+    "genres": [
+      "Comedy-drama",
+      "Crime"
+    ],
+    "href": "Orange_Is_the_New_Black",
+    "extract": "Orange Is the New Black is an American comedy-drama television series created by Jenji Kohan for Netflix. The series is based on Piper Kerman's memoir Orange Is the New Black: My Year in a Women's Prison.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/8/8a/Orange_Is_the_New_Black_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Mad Men",
+    "year": 2007,
+    "cast": [
+      "Jon Hamm",
+      "Elisabeth Moss",
+      "Vincent Kartheiser",
+      "January Jones",
+      "Christina Hendricks",
+      "John Slattery"
+    ],
+    "genres": [
+      "Period drama",
+      "Drama"
+    ],
+    "href": "Mad_Men",
+    "extract": "Mad Men is an American period drama television series created by Matthew Weiner and produced by Lionsgate Television. It ran on the cable network AMC from July 19, 2007, to May 17, 2015, lasting for seven seasons and 92 episodes.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/0/01/Mad_Men_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Fargo",
+    "year": 2014,
+    "cast": [
+      "Martin Freeman",
+      "Billy Bob Thornton",
+      "Allison Tolman",
+      "Colin Hanks",
+      "Kirsten Dunst",
+      "Jesse Plemons"
+    ],
+    "genres": [
+      "Crime",
+      "Drama",
+      "Black comedy",
+      "Thriller"
+    ],
+    "href": "Fargo_(TV_series)",
+    "extract": "Fargo is an American black comedy–crime drama anthology television series created and primarily written by Noah Hawley. The show is inspired by the 1996 film of the same name written and directed by the Coen brothers.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/4/4a/Fargo_TV_series_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Better Call Saul",
+    "year": 2015,
+    "cast": [
+      "Bob Odenkirk",
+      "Jonathan Banks",
+      "Rhea Seehorn",
+      "Patrick Fabian",
+      "Michael Mando",
+      "Michael McKean"
+    ],
+    "genres": [
+      "Crime",
+      "Drama",
+      "Legal drama"
+    ],
+    "href": "Better_Call_Saul",
+    "extract": "Better Call Saul is an American crime and legal drama television series created by Vince Gilligan and Peter Gould. It is a spin-off, prequel, and sequel of Gilligan's previous series, Breaking Bad.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/8/8a/Better_Call_Saul_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "The Handmaid's Tale",
+    "year": 2017,
+    "cast": [
+      "Elisabeth Moss",
+      "Joseph Fiennes",
+      "Yvonne Strahovski",
+      "Alexis Bledel",
+      "Madeline Brewer",
+      "Ann Dowd"
+    ],
+    "genres": [
+      "Dystopian",
+      "Drama",
+      "Thriller"
+    ],
+    "href": "The_Handmaid%27s_Tale_(TV_series)",
+    "extract": "The Handmaid's Tale is an American dystopian television series created by Bruce Miller, based on the 1985 novel of the same name by Margaret Atwood. It was ordered by the streaming service Hulu as a straight-to-series order of 10 episodes.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/9/9a/The_Handmaid%27s_Tale_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Black Mirror",
+    "year": 2011,
+    "cast": [
+      "Various"
+    ],
+    "genres": [
+      "Science fiction",
+      "Anthology",
+      "Drama",
+      "Thriller"
+    ],
+    "href": "Black_Mirror",
+    "extract": "Black Mirror is a British anthology television series created by Charlie Brooker. Individual episodes explore a diversity of genres, but most are set in near-future dystopias with sci-fi technology—a type of speculative fiction.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/4/4a/Black_Mirror_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Sherlock",
+    "year": 2010,
+    "cast": [
+      "Benedict Cumberbatch",
+      "Martin Freeman",
+      "Rupert Graves",
+      "Una Stubbs",
+      "Mark Gatiss",
+      "Andrew Scott"
+    ],
+    "genres": [
+      "Mystery",
+      "Crime",
+      "Drama"
+    ],
+    "href": "Sherlock_(TV_series)",
+    "extract": "Sherlock is a British mystery crime drama television series based on Sir Arthur Conan Doyle's Sherlock Holmes detective stories. Created by Steven Moffat and Mark Gatiss, it stars Benedict Cumberbatch as Sherlock Holmes and Martin Freeman as Doctor John Watson.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/8/8e/Sherlock_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Parks and Recreation",
+    "year": 2009,
+    "cast": [
+      "Amy Poehler",
+      "Rashida Jones",
+      "Aziz Ansari",
+      "Nick Offerman",
+      "Aubrey Plaza",
+      "Chris Pratt"
+    ],
+    "genres": [
+      "Comedy",
+      "Mockumentary"
+    ],
+    "href": "Parks_and_Recreation",
+    "extract": "Parks and Recreation is an American political satire mockumentary sitcom television series created by Greg Daniels and Michael Schur. The series stars Amy Poehler as Leslie Knope, a perky, mid-level bureaucrat in the Parks Department of Pawnee, a fictional town in Indiana.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/4/4a/Parks_and_Recreation_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "The Good Place",
+    "year": 2016,
+    "cast": [
+      "Kristen Bell",
+      "William Jackson Harper",
+      "Jameela Jamil",
+      "D'Arcy Carden",
+      "Manny Jacinto",
+      "Ted Danson"
+    ],
+    "genres": [
+      "Comedy",
+      "Fantasy",
+      "Philosophy"
+    ],
+    "href": "The_Good_Place",
+    "extract": "The Good Place is an American fantasy comedy television series created by Michael Schur. It premiered on September 19, 2016, on NBC. The series focuses on Eleanor Shellstrop, a woman welcomed after her death to 'the Good Place', a highly selective, heaven-like utopia designed and run by afterlife 'architect' Michael.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/9/9e/The_Good_Place_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Westworld",
+    "year": 2016,
+    "cast": [
+      "Evan Rachel Wood",
+      "Thandie Newton",
+      "Jeffrey Wright",
+      "James Marsden",
+      "Ingrid Bolsø Berdal",
+      "Luke Hemsworth"
+    ],
+    "genres": [
+      "Science fiction",
+      "Western",
+      "Drama",
+      "Thriller"
+    ],
+    "href": "Westworld_(TV_series)",
+    "extract": "Westworld is an American science fiction Western television series created by Jonathan Nolan and Lisa Joy. It is based on the 1973 film of the same name written and directed by Michael Crichton.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/8/8a/Westworld_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  }
+]
+

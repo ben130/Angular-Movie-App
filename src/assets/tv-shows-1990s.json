@@ -1,0 +1,323 @@
+[
+  {
+    "title": "The Simpsons",
+    "year": 1989,
+    "cast": [
+      "Dan Castellaneta",
+      "Julie Kavner",
+      "Nancy Cartwright",
+      "Yeardley Smith",
+      "Hank Azaria",
+      "Harry Shearer"
+    ],
+    "genres": [
+      "Animated",
+      "Comedy",
+      "Sitcom",
+      "Satire"
+    ],
+    "href": "The_Simpsons",
+    "extract": "The Simpsons is an American animated sitcom created by Matt Groening for the Fox Broadcasting Company. The series is a satirical depiction of American life, epitomized by the Simpson family, which consists of Homer, Marge, Bart, Lisa, and Maggie.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/0/0d/The_Simpsons_Logo.svg",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Seinfeld",
+    "year": 1989,
+    "cast": [
+      "Jerry Seinfeld",
+      "Julia Louis-Dreyfus",
+      "Michael Richards",
+      "Jason Alexander"
+    ],
+    "genres": [
+      "Comedy",
+      "Sitcom"
+    ],
+    "href": "Seinfeld",
+    "extract": "Seinfeld is an American television sitcom created by Larry David and Jerry Seinfeld. It aired on NBC from July 5, 1989, to May 14, 1998, over nine seasons and 180 episodes. The show focuses on Jerry Seinfeld playing a semi-fictionalized version of himself.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/9/9a/Seinfeld_logo.svg",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Twin Peaks",
+    "year": 1990,
+    "cast": [
+      "Kyle MacLachlan",
+      "Michael Ontkean",
+      "Mädchen Amick",
+      "Dana Ashbrook",
+      "Richard Beymer",
+      "Lara Flynn Boyle"
+    ],
+    "genres": [
+      "Mystery",
+      "Drama",
+      "Horror",
+      "Supernatural"
+    ],
+    "href": "Twin_Peaks",
+    "extract": "Twin Peaks is an American mystery horror drama television series created by Mark Frost and David Lynch. It premiered on ABC on April 8, 1990, and ran for two seasons until its cancellation in 1991. The show follows an investigation, headed by FBI Special Agent Dale Cooper, into the murder of homecoming queen Laura Palmer in the fictional town of Twin Peaks, Washington.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/4/4a/Twin_Peaks_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "The Fresh Prince of Bel-Air",
+    "year": 1990,
+    "cast": [
+      "Will Smith",
+      "James Avery",
+      "Alfonso Ribeiro",
+      "Tatyana Ali",
+      "Karyn Parsons",
+      "Joseph Marcell"
+    ],
+    "genres": [
+      "Comedy",
+      "Sitcom"
+    ],
+    "href": "The_Fresh_Prince_of_Bel-Air",
+    "extract": "The Fresh Prince of Bel-Air is an American sitcom television series that originally aired on NBC from September 10, 1990, to May 20, 1996. The series stars Will Smith as a street-smart teenager from West Philadelphia who is sent to move in with his wealthy uncle and aunt in their Bel Air mansion.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/9/9e/The_Fresh_Prince_of_Bel-Air_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "The X-Files",
+    "year": 1993,
+    "cast": [
+      "David Duchovny",
+      "Gillian Anderson",
+      "Mitch Pileggi",
+      "Robert Patrick",
+      "Annabeth Gish"
+    ],
+    "genres": [
+      "Science fiction",
+      "Drama",
+      "Mystery",
+      "Horror"
+    ],
+    "href": "The_X-Files",
+    "extract": "The X-Files is an American science fiction drama television series created by Chris Carter. The original television series aired from September 10, 1993, to May 19, 2002, on Fox. The program spanned nine seasons, with 202 episodes.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/8/8a/The_X-Files_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "ER",
+    "year": 1994,
+    "cast": [
+      "Anthony Edwards",
+      "George Clooney",
+      "Sherry Stringfield",
+      "Noah Wyle",
+      "Julianna Margulies",
+      "Eriq La Salle"
+    ],
+    "genres": [
+      "Medical drama",
+      "Drama"
+    ],
+    "href": "ER_(TV_series)",
+    "extract": "ER is an American medical drama television series created by novelist and physician Michael Crichton that aired on NBC from September 19, 1994, to April 2, 2009, with a total of 331 episodes spanning over 15 seasons.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/4/4a/ER_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Friends",
+    "year": 1994,
+    "cast": [
+      "Jennifer Aniston",
+      "Courteney Cox",
+      "Lisa Kudrow",
+      "Matt LeBlanc",
+      "Matthew Perry",
+      "David Schwimmer"
+    ],
+    "genres": [
+      "Comedy",
+      "Sitcom"
+    ],
+    "href": "Friends",
+    "extract": "Friends is an American television sitcom created by David Crane and Marta Kauffman, which aired on NBC from September 22, 1994, to May 6, 2004, lasting ten seasons. With an ensemble cast starring Jennifer Aniston, Courteney Cox, Lisa Kudrow, Matt LeBlanc, Matthew Perry, and David Schwimmer, the show revolves around six friends in their 20s and 30s who live in Manhattan, New York City.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/0/0b/Friends_logo.svg",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "The West Wing",
+    "year": 1999,
+    "cast": [
+      "Martin Sheen",
+      "Rob Lowe",
+      "Dulé Hill",
+      "Allison Janney",
+      "Richard Schiff",
+      "John Spencer"
+    ],
+    "genres": [
+      "Political drama",
+      "Drama"
+    ],
+    "href": "The_West_Wing",
+    "extract": "The West Wing is an American serial political drama television series created by Aaron Sorkin that was originally broadcast on NBC from September 22, 1999, to May 14, 2006. The series is set primarily in the West Wing of the White House, where the Oval Office and offices of presidential senior staff are located, during the fictitious Democratic administration of Josiah Bartlet.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/9/9a/The_West_Wing_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Law & Order",
+    "year": 1990,
+    "cast": [
+      "Jerry Orbach",
+      "Jesse L. Martin",
+      "S. Epatha Merkerson",
+      "Sam Waterston",
+      "Chris Noth",
+      "Benjamin Bratt"
+    ],
+    "genres": [
+      "Crime",
+      "Drama",
+      "Legal drama"
+    ],
+    "href": "Law_%26_Order",
+    "extract": "Law & Order is an American police procedural and legal drama television series, created by Dick Wolf and part of the Law & Order franchise. It originally aired on NBC and, in syndication, on various cable networks. The series follows a two-part approach: the first half-hour is the investigation of a crime and apprehension of a suspect by New York City Police Department homicide detectives; the second half is the prosecution of the defendant by the Manhattan District Attorney's Office.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/4/4a/Law_%26_Order_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Star Trek: The Next Generation",
+    "year": 1987,
+    "cast": [
+      "Patrick Stewart",
+      "Jonathan Frakes",
+      "LeVar Burton",
+      "Marina Sirtis",
+      "Brent Spiner",
+      "Gates McFadden"
+    ],
+    "genres": [
+      "Science fiction",
+      "Drama",
+      "Adventure"
+    ],
+    "href": "Star_Trek%3A_The_Next_Generation",
+    "extract": "Star Trek: The Next Generation is an American science fiction television series created by Gene Roddenberry that originally aired from September 28, 1987, to May 23, 1994, in syndication, spanning 178 episodes over seven seasons. The third series in the Star Trek franchise, it is the second sequel to Star Trek: The Original Series.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/8/8a/Star_Trek_The_Next_Generation_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "NYPD Blue",
+    "year": 1993,
+    "cast": [
+      "Dennis Franz",
+      "David Caruso",
+      "Jimmy Smits",
+      "James McDaniel",
+      "Nicholas Turturro",
+      "Gordon Clapp"
+    ],
+    "genres": [
+      "Crime",
+      "Drama",
+      "Police procedural"
+    ],
+    "href": "NYPD_Blue",
+    "extract": "NYPD Blue is an American police procedural drama television series set in New York City, exploring the internal and external struggles of the fictional 15th Precinct of Manhattan. The series was created by Steven Bochco and David Milch.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/9/9a/NYPD_Blue_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Frasier",
+    "year": 1993,
+    "cast": [
+      "Kelsey Grammer",
+      "David Hyde Pierce",
+      "Jane Leeves",
+      "Peri Gilpin",
+      "John Mahoney"
+    ],
+    "genres": [
+      "Comedy",
+      "Sitcom"
+    ],
+    "href": "Frasier",
+    "extract": "Frasier is an American sitcom television series that was broadcast on NBC for 11 seasons. It was created by David Angell, Peter Casey, and David Lee as a spin-off of Cheers, continuing the story of psychiatrist Frasier Crane as he returns to his hometown of Seattle and builds a new life as a radio advice-show host while reconnecting with his brother Niles and father Martin.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/4/4a/Frasier_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "The Practice",
+    "year": 1997,
+    "cast": [
+      "Dylan McDermott",
+      "Michael Badalucco",
+      "LisaGay Hamilton",
+      "Steve Harris",
+      "Camryn Manheim",
+      "Kelli Williams"
+    ],
+    "genres": [
+      "Legal drama",
+      "Drama"
+    ],
+    "href": "The_Practice",
+    "extract": "The Practice is an American legal drama created by David E. Kelley centering on the partners and associates at a Boston law firm. The show won the Emmy in 1998 and 1999 for Outstanding Drama Series, and spawned the spin-off series Boston Legal, which ran for five more seasons.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/9/9e/The_Practice_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Ally McBeal",
+    "year": 1997,
+    "cast": [
+      "Calista Flockhart",
+      "Greg Germann",
+      "Jane Krakowski",
+      "Vonda Shepard",
+      "Peter MacNicol",
+      "Portia de Rossi"
+    ],
+    "genres": [
+      "Legal comedy",
+      "Comedy-drama"
+    ],
+    "href": "Ally_McBeal",
+    "extract": "Ally McBeal is an American legal comedy-drama television series, originally aired on Fox from September 8, 1997, to May 20, 2002. The series was created by David E. Kelley, who also served as the executive producer, along with Bill D'Elia. The title character, played by Calista Flockhart, is a lawyer working in the fictional Boston law firm Cage and Fish, with other lawyers whose lives and loves are eccentric, humorous, and dramatic.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/4/4a/Ally_McBeal_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "South Park",
+    "year": 1997,
+    "cast": [
+      "Trey Parker",
+      "Matt Stone",
+      "Isaac Hayes",
+      "Mary Kay Bergman"
+    ],
+    "genres": [
+      "Animated",
+      "Comedy",
+      "Satire",
+      "Black comedy"
+    ],
+    "href": "South_Park",
+    "extract": "South Park is an American animated sitcom created by Trey Parker and Matt Stone and developed by Brian Graden for Comedy Central. The series revolves around four boys—Stan Marsh, Kyle Broflovski, Eric Cartman, and Kenny McCormick—and their exploits in and around the titular Colorado town.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/9/9e/South_Park_logo.svg",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  }
+]
+

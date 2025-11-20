@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { forkJoin, map, Observable } from 'rxjs';
+import { forkJoin, map, Observable, switchMap, debounceTime, distinctUntilChanged } from 'rxjs';
 import { IMovie } from '../models/IMovie';
 
 @Component({
@@ -16,6 +16,13 @@ export class MovieForm {
   movies: IMovie[] = [];
   topRated: any[] = [];
   randomMovie: IMovie | undefined = undefined;
+  
+  // Filter and sort options
+  selectedGenre: string = '';
+  selectedDecade: string = '';
+  sortBy: string = 'title';
+  allGenres: string[] = [];
+  filteredResults: any[] = [];
 
   constructor(private http: HttpClient) {
     
@@ -27,9 +34,18 @@ export class MovieForm {
   }
 
   ngOnChanges(){
-    this.name.valueChanges.subscribe((x: string) => {
-      console.log(x);
-    })
+    // Auto-search as user types (with debounce)
+    this.name.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe((value: string) => {
+      if (value && value.length > 0) {
+        this.search();
+      } else {
+        this.searchResults = [];
+        this.filteredResults = [];
+      }
+    });
   }
 
   loadContent() {
@@ -40,16 +56,32 @@ export class MovieForm {
   getMovies() {     
     this.getAllMovies().subscribe(data => {
       this.movies = data;
+      // Extract all unique genres
+      const genreSet = new Set<string>();
+      data.forEach(item => {
+        if (item.genres && Array.isArray(item.genres)) {
+          item.genres.forEach(genre => genreSet.add(genre));
+        }
+      });
+      this.allGenres = Array.from(genreSet).sort();
     });
   }
 
   getAllMovies(): Observable<IMovie[]> {
-    const files = ['movies2020.json', 'movies-2010s.json', 'movies-2000s.json', 'movies-1990s.json', 'movies-1980s.json'];
-    const requests: Observable<IMovie[]>[] = files.map(name =>
-      this.http.get<IMovie[]>(`assets/${name}`)
-    );
-    return forkJoin(requests).pipe(
-      map(results => results.flat())
+    // Load the manifest to get the list of movie and TV show files, then load all files
+    return this.http.get<{movieFiles: string[], tvShowFiles: string[]}>('assets/movies-manifest.json').pipe(
+      switchMap(manifest => {
+        // Combine both movie and TV show files into a single array
+        const allFiles = [...manifest.movieFiles, ...manifest.tvShowFiles];
+        // Create HTTP requests for all files listed in the manifest
+        const requests: Observable<IMovie[]>[] = allFiles.map(name =>
+          this.http.get<IMovie[]>(`assets/${name}`)
+        );
+        // Load all files in parallel and flatten the results
+        return forkJoin(requests).pipe(
+          map(results => results.flat())
+        );
+      })
     );
   }
 
@@ -60,12 +92,96 @@ export class MovieForm {
   }
 
   search() {
-    this.searchResults = this.name.value ? this.movies.filter(x => x.title.toLowerCase().includes(this.name.value.toLowerCase())) : [];
+    if (!this.name.value || this.name.value.trim().length === 0) {
+      this.searchResults = [];
+      this.filteredResults = [];
+      return;
+    }
+    
+    const searchTerm = this.name.value.toLowerCase().trim();
+    this.searchResults = this.movies.filter(x => 
+      x.title.toLowerCase().includes(searchTerm)
+    );
+    this.applyFilters();
+  }
+
+  clearSearch() {
+    this.name.setValue('');
+    this.searchResults = [];
+    this.filteredResults = [];
+    this.selectedGenre = '';
+    this.selectedDecade = '';
+    this.sortBy = 'title';
+  }
+
+  applyFilters() {
+    // Only apply filters if we have search results
+    if (this.searchResults.length === 0) {
+      this.filteredResults = [];
+      return;
+    }
+    
+    let results = [...this.searchResults];
+    
+    // Filter by genre
+    if (this.selectedGenre) {
+      results = results.filter(item => 
+        item.genres && Array.isArray(item.genres) && item.genres.includes(this.selectedGenre)
+      );
+    }
+    
+    // Filter by decade
+    if (this.selectedDecade) {
+      const decadeStart = parseInt(this.selectedDecade);
+      const decadeEnd = decadeStart + 9;
+      results = results.filter(item => 
+        item.year >= decadeStart && item.year <= decadeEnd
+      );
+    }
+    
+    // Sort results
+    results.sort((a, b) => {
+      if (this.sortBy === 'title') {
+        return a.title.localeCompare(b.title);
+      } else if (this.sortBy === 'year') {
+        return b.year - a.year; // Newest first
+      }
+      return 0;
+    });
+    
+    this.filteredResults = results;
+  }
+
+  onGenreChange() {
+    this.applyFilters();
+  }
+
+  onDecadeChange() {
+    this.applyFilters();
+  }
+
+  onSortChange() {
+    this.applyFilters();
+  }
+
+  onKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      this.search();
+    }
   }
 
   getRandomMovie() {
     const index = Math.floor(Math.random() * this.movies.length);
     this.randomMovie = this.movies[index];
+  }
+
+  getDecades(): number[] {
+    const decades = new Set<number>();
+    this.movies.forEach(item => {
+      const decade = Math.floor(item.year / 10) * 10;
+      decades.add(decade);
+    });
+    return Array.from(decades).sort((a, b) => b - a); // Newest first
   }
 }
 

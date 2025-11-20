@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
 import { MovieForm } from './movie-form/movie-form';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { provideHttpClient } from '@angular/common/http';
 
 @NgModule({
@@ -15,7 +15,8 @@ import { provideHttpClient } from '@angular/common/http';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),

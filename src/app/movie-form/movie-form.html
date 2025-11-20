@@ -1,107 +1,132 @@
-<!---<label for="name">Film Title: </label>
-<input id="name" type="text" [formControl]="name">
-
-<button (click)="getDetails()">Submit</button>
-
-
-<ul *ngIf="searchResults && searchResults.length > 0">
-    <li *ngFor="let item of searchResults">
-        {{ item.Title }}
-        <div *ngIf='item.Poster && item.Poster !== "N/A" '>
-            <img [src]="item.Poster"/>  
-        </div>
-    </li>
-</ul>
--->
 <body>
 
   <!-- Navigation -->
   <header class="nav">
-    <div class="logo">🍏</div>
+    <div class="logo">🍿</div>
     <nav>
-      <a href="#">Test</a>
-      <!-- <a href="#">iPhone</a>
-      <a href="#">iPad</a>
-      <a href="#">Support</a> -->
+      <a href="#search">Search</a>
+      <a href="#top-rated">Top Rated</a>
+      <a href="#discover">Discover</a>
     </nav>
   </header>
 
   <!-- Hero Section -->
-  <section class="hero">
+  <section class="hero" id="search">
     <div class="container">
-      <h1>Movie & TV Show Database</h1>
+      <h1>FlickBase</h1>
+      <p>Discover your next favorite film or series</p>
       <div class="input-group">
-        <input id="name" type="text" [formControl]="name" placeholder="Enter Movie/TV Show Title">
+        <div class="search-container">
+          <input id="name" type="text" [formControl]="name" placeholder="Search for movies or TV shows..." 
+                 (keydown)="onKeyDown($event)">
+          <button class="btn-clear" *ngIf="name.value" (click)="clearSearch()" title="Clear search">×</button>
+        </div>
       </div>
-      <!-- <p>The most powerful device we've ever created.</p> -->
-      <button style="margin-top: 15px" class="btn" (click)="search()">Search</button>
-      <!-- <a href="#" class="btn">Learn More</a> -->
+      <button class="btn" (click)="search()">Search</button>
     </div>
   </section>
 
-  <!-- Features (Gray Block) -->
-  <section class="section gray">
+  <!-- Search Results -->
+  <section class="section gray" *ngIf="searchResults && searchResults.length > 0">
     <div class="container">
-      <h2>A curated list of results</h2>
-      <!-- <div class="features">
-        <div class="feature">
-          <h3>Ultra Performance</h3>
-          <p>Equipped with the latest chip to handle anything you throw at it.</p>
+      <h2>Search Results</h2>
+      <p>{{ filteredResults.length }} result{{ filteredResults.length !== 1 ? 's' : '' }} found</p>
+      
+      <!-- Filters -->
+      <div class="filters">
+        <div class="filter-group">
+          <label for="genre-filter">Genre:</label>
+          <select id="genre-filter" [(ngModel)]="selectedGenre" (change)="onGenreChange()" class="filter-select">
+            <option value="">All Genres</option>
+            <option *ngFor="let genre of allGenres" [value]="genre">{{ genre }}</option>
+          </select>
         </div>
-        <div class="feature">
-          <h3>All-day Battery</h3>
-          <p>Power that keeps up with your lifestyle, no matter where you go.</p>
+        
+        <div class="filter-group">
+          <label for="decade-filter">Decade:</label>
+          <select id="decade-filter" [(ngModel)]="selectedDecade" (change)="onDecadeChange()" class="filter-select">
+            <option value="">All Decades</option>
+            <option *ngFor="let decade of getDecades()" [value]="decade">{{ decade }}s</option>
+          </select>
         </div>
-        <div class="feature">
-          <h3>Pro Camera</h3>
-          <p>Crystal-clear quality in every photo, from daylight to night mode.</p>
+        
+        <div class="filter-group">
+          <label for="sort-filter">Sort by:</label>
+          <select id="sort-filter" [(ngModel)]="sortBy" (change)="onSortChange()" class="filter-select">
+            <option value="title">Title (A-Z)</option>
+            <option value="year">Year (Newest First)</option>
+          </select>
         </div>
-      </div> -->
-      <div class="results" *ngIf="searchResults && searchResults.length > 0">
-        <div *ngFor="let item of searchResults">
-            <p>{{ item.title }} - {{ item.year }}</p>
-            <div *ngIf='item.thumbnail'>
-                <img [src]="item.thumbnail"/>  
+      </div>
+      
+      <div class="results">
+        <div class="movie-card" *ngFor="let item of filteredResults">
+          <img *ngIf="item.thumbnail" [src]="item.thumbnail" [alt]="item.title" class="movie-card-image" 
+               onerror="this.style.display='none'">
+          <div class="movie-card-content">
+            <div class="movie-card-title">{{ item.title }}</div>
+            <div class="movie-card-year">{{ item.year }}</div>
+            <div class="movie-card-platform" *ngIf="item.genres && item.genres.length > 0">
+              {{ item.genres.join(', ') }}
             </div>
+          </div>
         </div>
+      </div>
     </div>
+  </section>
+  
+  <!-- No Results Message -->
+  <section class="section gray" *ngIf="name.value && searchResults.length === 0">
+    <div class="container">
+      <div class="empty-state">
+        <div class="empty-state-icon">🔍</div>
+        <div class="empty-state-text">No results found for "{{ name.value }}"</div>
+        <button class="btn secondary" (click)="clearSearch()" style="margin-top: 20px;">Clear Search</button>
+      </div>
     </div>
   </section>
 
-  <!-- Product Showcase -->
-  <section class="section showcase">
+  <!-- Top Rated Section -->
+  <section class="section showcase" id="top-rated">
     <div class="container">
-      <!-- <img src="https://www.apple.com/v/iphone/home/bo/images/meta/iphone__ky2k6x5u6vue_og.png" alt="Product Image"> -->
       <h2>Top Rated</h2>
-      <p>All Streaming Services</p>
+      <p>Most watched across all streaming services</p>
       <div class="results" *ngIf="topRated && topRated.length > 0">
-        <div *ngFor="let item of topRated">
-            <p>{{ item.title }} - {{ item.platform }}</p>
-            <p>Minutes Viewed: {{ item.minutes_viewed_billions }} (Billion)</p>
-            <div *ngIf='item.thumbnail'>
-                <img [src]="item.thumbnail"/>  
+        <div class="movie-card" *ngFor="let item of topRated">
+          <img *ngIf="item.thumbnail" [src]="item.thumbnail" [alt]="item.title" class="movie-card-image"
+               onerror="this.style.display='none'">
+          <div class="movie-card-content">
+            <div class="movie-card-title">{{ item.title }}</div>
+            <div class="movie-card-platform">{{ item.platform }}</div>
+            <div class="movie-card-stats">
+              {{ item.minutes_viewed_billions }}B minutes viewed
             </div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Ecosystem (Gray Block) -->
-  <section class="section gray">
+  <!-- Random Movie Section -->
+  <section class="section gray" id="discover">
     <div class="container">
-      <h2 style="margin-bottom: 10px;">Unsure?</h2>
-      <button class="btn secondary" style="margin-bottom: 10px" (click)="getRandomMovie()">Random Suggestion</button>
-      <!-- <ul class="benefits">
-        <li>Seamless integration across all your Apple devices</li>
-        <li>Privacy and security built in</li>
-        <li>Support that actually supports</li>
-      </ul> -->
-      <div *ngIf="randomMovie">
-        <p style="font-size: 20px;">{{ randomMovie.title }} - {{ randomMovie.year }}</p>
-        <div *ngIf='randomMovie.thumbnail'>
-            <img [src]="randomMovie.thumbnail"/>  
-        </div>   
-      </div>   
+      <h2>Not sure what to watch?</h2>
+      <p>Let us surprise you with a random pick</p>
+      <button class="btn secondary" (click)="getRandomMovie()">Get Random Suggestion</button>
+      <div class="random-movie-container" *ngIf="randomMovie">
+        <div class="random-movie-card">
+          <img *ngIf="randomMovie.thumbnail" [src]="randomMovie.thumbnail" [alt]="randomMovie.title" 
+               class="random-movie-image" onerror="this.style.display='none'">
+          <div class="random-movie-info">
+            <div class="random-movie-title">{{ randomMovie.title }}</div>
+            <div class="random-movie-year">{{ randomMovie.year }}</div>
+            <div class="movie-card-platform" *ngIf="randomMovie.genres && randomMovie.genres.length > 0" 
+                 style="margin-top: 12px;">
+              {{ randomMovie.genres.join(' • ') }}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 

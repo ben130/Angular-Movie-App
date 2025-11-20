@@ -1,0 +1,323 @@
+[
+  {
+    "title": "Cheers",
+    "year": 1982,
+    "cast": [
+      "Ted Danson",
+      "Shelley Long",
+      "Nicholas Colasanto",
+      "Rhea Perlman",
+      "John Ratzenberger",
+      "George Wendt"
+    ],
+    "genres": [
+      "Comedy",
+      "Sitcom"
+    ],
+    "href": "Cheers",
+    "extract": "Cheers is an American sitcom television series that ran on NBC from September 30, 1982, to May 20, 1993, with a total of 275 half-hour episodes across 11 seasons. The show was produced by Charles/Burrows/Charles Productions in association with Paramount Network Television.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/4/4a/Cheers_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Miami Vice",
+    "year": 1984,
+    "cast": [
+      "Don Johnson",
+      "Philip Michael Thomas",
+      "Saundra Santiago",
+      "Michael Talbott",
+      "John Diehl",
+      "Olivia Brown"
+    ],
+    "genres": [
+      "Crime",
+      "Drama",
+      "Action",
+      "Thriller"
+    ],
+    "href": "Miami_Vice",
+    "extract": "Miami Vice is an American crime drama television series created by Anthony Yerkovich and produced by Michael Mann for NBC. The series stars Don Johnson as James 'Sonny' Crockett and Philip Michael Thomas as Ricardo 'Rico' Tubbs, two Metro-Dade Police Department detectives working undercover in Miami.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/9/9a/Miami_Vice_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "The Cosby Show",
+    "year": 1984,
+    "cast": [
+      "Bill Cosby",
+      "Phylicia Rashād",
+      "Malcolm-Jamal Warner",
+      "Lisa Bonet",
+      "Tempestt Bledsoe",
+      "Keshia Knight Pulliam"
+    ],
+    "genres": [
+      "Comedy",
+      "Sitcom",
+      "Family"
+    ],
+    "href": "The_Cosby_Show",
+    "extract": "The Cosby Show is an American television sitcom co-created by and starring Bill Cosby. The series aired from September 20, 1984, to April 30, 1992, on NBC, with 201 episodes spanning eight seasons.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/4/4a/The_Cosby_Show_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Hill Street Blues",
+    "year": 1981,
+    "cast": [
+      "Daniel J. Travanti",
+      "Michael Warren",
+      "Bruce Weitz",
+      "Betty Thomas",
+      "Charles Haid",
+      "Veronica Hamel"
+    ],
+    "genres": [
+      "Crime",
+      "Drama",
+      "Police procedural"
+    ],
+    "href": "Hill_Street_Blues",
+    "extract": "Hill Street Blues is an American serial police drama television series that aired on NBC in prime-time from January 15, 1981, to May 12, 1987, for 146 episodes. The show chronicles the lives of the staff of a single police precinct in an unnamed American city.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/9/9e/Hill_Street_Blues_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "St. Elsewhere",
+    "year": 1982,
+    "cast": [
+      "Ed Flanders",
+      "Norman Lloyd",
+      "William Daniels",
+      "Ed Begley Jr.",
+      "David Morse",
+      "Howie Mandel"
+    ],
+    "genres": [
+      "Medical drama",
+      "Drama"
+    ],
+    "href": "St._Elsewhere",
+    "extract": "St. Elsewhere is an American medical drama television series that originally ran on NBC from October 26, 1982, to May 25, 1988, for six seasons and 137 episodes. The series starred Ed Flanders, Norman Lloyd, and William Daniels as teaching doctors at a decaying urban hospital called St. Eligius in Boston.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/4/4a/St._Elsewhere_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Family Ties",
+    "year": 1982,
+    "cast": [
+      "Michael J. Fox",
+      "Meredith Baxter",
+      "Michael Gross",
+      "Justine Bateman",
+      "Tina Yothers",
+      "Brian Bonsall"
+    ],
+    "genres": [
+      "Comedy",
+      "Sitcom",
+      "Family"
+    ],
+    "href": "Family_Ties",
+    "extract": "Family Ties is an American sitcom television series that aired on NBC for seven seasons, premiering on September 22, 1982, and concluding on May 14, 1989. The series, created by Gary David Goldberg, reflected the move in the United States from the cultural liberalism of the 1960s and 1970s to the conservatism of the 1980s.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/9/9a/Family_Ties_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Magnum, P.I.",
+    "year": 1980,
+    "cast": [
+      "Tom Selleck",
+      "John Hillerman",
+      "Roger E. Mosley",
+      "Larry Manetti"
+    ],
+    "genres": [
+      "Crime",
+      "Drama",
+      "Action",
+      "Mystery"
+    ],
+    "href": "Magnum%2C_P.I.",
+    "extract": "Magnum, P.I. is an American crime drama television series starring Tom Selleck as Thomas Magnum, a private investigator living on Oahu, Hawaii. The series ran from December 11, 1980, to May 8, 1988, on CBS.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/4/4a/Magnum_P.I._logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Dallas",
+    "year": 1978,
+    "cast": [
+      "Larry Hagman",
+      "Patrick Duffy",
+      "Linda Gray",
+      "Victoria Principal",
+      "Ken Kercheval",
+      "Barbara Bel Geddes"
+    ],
+    "genres": [
+      "Drama",
+      "Soap opera"
+    ],
+    "href": "Dallas_(1978_TV_series)",
+    "extract": "Dallas is an American prime time television soap opera that aired on CBS from April 2, 1978, to May 3, 1991. The series revolves around an affluent and feuding Texas family, the Ewings, who own the independent oil company Ewing Oil and the cattle-ranching land of Southfork.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/9/9a/Dallas_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Dynasty",
+    "year": 1981,
+    "cast": [
+      "John Forsythe",
+      "Linda Evans",
+      "Joan Collins",
+      "Pamela Sue Martin",
+      "Al Corley",
+      "John James"
+    ],
+    "genres": [
+      "Drama",
+      "Soap opera"
+    ],
+    "href": "Dynasty_(1981_TV_series)",
+    "extract": "Dynasty is an American prime time television soap opera that aired on ABC from January 12, 1981, to May 11, 1989. The series, created by Richard and Esther Shapiro and produced by Aaron Spelling, focuses on the Carringtons, a wealthy oil family living in Denver, Colorado.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/4/4a/Dynasty_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Knight Rider",
+    "year": 1982,
+    "cast": [
+      "David Hasselhoff",
+      "Edward Mulhare",
+      "Patricia McPherson",
+      "Rebecca Holden"
+    ],
+    "genres": [
+      "Action",
+      "Crime",
+      "Science fiction"
+    ],
+    "href": "Knight_Rider",
+    "extract": "Knight Rider is an American action crime drama television series created and produced by Glen A. Larson. The series was originally broadcast on NBC from September 26, 1982, to April 4, 1986. The series stars David Hasselhoff as Michael Knight, a high-tech modern-day knight fighting crime with the help of an advanced, artificially intelligent, self-aware and nearly indestructible car named KITT.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/9/9a/Knight_Rider_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "The A-Team",
+    "year": 1983,
+    "cast": [
+      "George Peppard",
+      "Dirk Benedict",
+      "Mr. T",
+      "Dwight Schultz",
+      "Melinda Culea",
+      "Marla Heasley"
+    ],
+    "genres": [
+      "Action",
+      "Adventure",
+      "Comedy",
+      "Crime"
+    ],
+    "href": "The_A-Team",
+    "extract": "The A-Team is an American action-adventure television series that ran on NBC from January 23, 1983, to March 8, 1987, about a fictional group of ex-United States Army Special Forces personnel who work as soldiers of fortune, while on the run from the military after being branded as war criminals for a 'crime they didn't commit'.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/4/4a/The_A-Team_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Murder, She Wrote",
+    "year": 1984,
+    "cast": [
+      "Angela Lansbury",
+      "Tom Bosley",
+      "William Windom",
+      "Ron Masak"
+    ],
+    "genres": [
+      "Mystery",
+      "Crime",
+      "Drama"
+    ],
+    "href": "Murder%2C_She_Wrote",
+    "extract": "Murder, She Wrote is an American crime drama television series starring Angela Lansbury as mystery writer and amateur detective Jessica Fletcher. The series aired for 12 seasons with 264 episodes from September 30, 1984, to May 19, 1996, on the CBS television network.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/9/9e/Murder%2C_She_Wrote_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Moonlighting",
+    "year": 1985,
+    "cast": [
+      "Cybill Shepherd",
+      "Bruce Willis",
+      "Allyce Beasley",
+      "Curtis Armstrong"
+    ],
+    "genres": [
+      "Comedy",
+      "Drama",
+      "Mystery",
+      "Romance"
+    ],
+    "href": "Moonlighting_(TV_series)",
+    "extract": "Moonlighting is an American comedy-drama television series that aired on ABC from March 3, 1985, to May 14, 1989. The series starred Cybill Shepherd and Bruce Willis as private detectives, working together in a Los Angeles detective agency run by the former model Maddie Hayes.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/4/4a/Moonlighting_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "L.A. Law",
+    "year": 1986,
+    "cast": [
+      "Harry Hamlin",
+      "Susan Dey",
+      "Corbin Bernsen",
+      "Jill Eikenberry",
+      "Michael Tucker",
+      "Richard Dysart"
+    ],
+    "genres": [
+      "Legal drama",
+      "Drama"
+    ],
+    "href": "L.A._Law",
+    "extract": "L.A. Law is an American legal drama television series that ran for eight seasons on NBC from September 15, 1986, to May 19, 1994. Created by Steven Bochco and Terry Louise Fisher, it contained many of Bochco's trademark features including an ensemble cast, large number of parallel storylines, social drama, and off-the-wall humor.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/9/9a/L.A._Law_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "thirtysomething",
+    "year": 1987,
+    "cast": [
+      "Ken Olin",
+      "Mel Harris",
+      "Timothy Busfield",
+      "Patricia Wettig",
+      "Melanie Mayron",
+      "Peter Horton"
+    ],
+    "genres": [
+      "Drama",
+      "Comedy-drama"
+    ],
+    "href": "Thirtysomething",
+    "extract": "thirtysomething is an American drama television series created by Marshall Herskovitz and Edward Zwick. It aired on ABC from September 29, 1987, to May 28, 1991. The show focuses on a group of baby boomers in their thirties who live in Philadelphia, Pennsylvania, and their friendship, careers, relationships, and loves.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/4/4a/Thirtysomething_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  }
+]
+
