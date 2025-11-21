@@ -1,7 +1,7 @@
 {
   "version": 3,
-  "sources": [],
-  "sourcesContent": [],
-  "mappings": "",
+  "sources": ["src/styles.css"],
+  "sourcesContent": ["/* Global Styles */\nhtml {\n  scroll-behavior: smooth;\n  margin: 0;\n  padding: 0;\n}\n\nbody {\n  overflow-x: hidden;\n  margin: 0;\n  padding: 0;\n}\n\napp-root {\n  display: block;\n  margin: 0;\n  padding: 0;\n}\n\n/* Custom Scrollbar */\n::-webkit-scrollbar {\n  width: 10px;\n}\n\n::-webkit-scrollbar-track {\n  background: #1a1a1a;\n}\n\n::-webkit-scrollbar-thumb {\n  background: #424245;\n  border-radius: 5px;\n}\n\n::-webkit-scrollbar-thumb:hover {\n  background: #57575a;\n}\n\n/* Selection */\n::selection {\n  background-color: rgba(0, 113, 227, 0.3);\n  color: #f5f5f7;\n}\n"],
+  "mappings": ";AACA;AACE,mBAAiB;AACjB,UAAQ;AACR,WAAS;AACX;AAEA;AACE,cAAY;AACZ,UAAQ;AACR,WAAS;AACX;AAEA;AACE,WAAS;AACT,UAAQ;AACR,WAAS;AACX;AAGA;AACE,SAAO;AACT;AAEA;AACE,cAAY;AACd;AAEA;AACE,cAAY;AACZ,iBAAe;AACjB;AAEA,yBAAyB;AACvB,cAAY;AACd;AAGA;AACE,oBAAkB,KAAK,CAAC,EAAE,GAAG,EAAE,GAAG,EAAE;AACpC,SAAO;AACT;",
   "names": []
 }

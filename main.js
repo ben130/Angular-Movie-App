@@ -1174,6 +1174,163 @@ var BehaviorSubject = class extends Subject {
   }
 };
 
+// node_modules/rxjs/dist/esm/internal/scheduler/dateTimestampProvider.js
+var dateTimestampProvider = {
+  now() {
+    return (dateTimestampProvider.delegate || Date).now();
+  },
+  delegate: void 0
+};
+
+// node_modules/rxjs/dist/esm/internal/scheduler/Action.js
+var Action = class extends Subscription {
+  constructor(scheduler, work) {
+    super();
+  }
+  schedule(state, delay = 0) {
+    return this;
+  }
+};
+
+// node_modules/rxjs/dist/esm/internal/scheduler/intervalProvider.js
+var intervalProvider = {
+  setInterval(handler, timeout, ...args) {
+    const { delegate } = intervalProvider;
+    if (delegate === null || delegate === void 0 ? void 0 : delegate.setInterval) {
+      return delegate.setInterval(handler, timeout, ...args);
+    }
+    return setInterval(handler, timeout, ...args);
+  },
+  clearInterval(handle) {
+    const { delegate } = intervalProvider;
+    return ((delegate === null || delegate === void 0 ? void 0 : delegate.clearInterval) || clearInterval)(handle);
+  },
+  delegate: void 0
+};
+
+// node_modules/rxjs/dist/esm/internal/scheduler/AsyncAction.js
+var AsyncAction = class extends Action {
+  constructor(scheduler, work) {
+    super(scheduler, work);
+    this.scheduler = scheduler;
+    this.work = work;
+    this.pending = false;
+  }
+  schedule(state, delay = 0) {
+    var _a;
+    if (this.closed) {
+      return this;
+    }
+    this.state = state;
+    const id = this.id;
+    const scheduler = this.scheduler;
+    if (id != null) {
+      this.id = this.recycleAsyncId(scheduler, id, delay);
+    }
+    this.pending = true;
+    this.delay = delay;
+    this.id = (_a = this.id) !== null && _a !== void 0 ? _a : this.requestAsyncId(scheduler, this.id, delay);
+    return this;
+  }
+  requestAsyncId(scheduler, _id, delay = 0) {
+    return intervalProvider.setInterval(scheduler.flush.bind(scheduler, this), delay);
+  }
+  recycleAsyncId(_scheduler, id, delay = 0) {
+    if (delay != null && this.delay === delay && this.pending === false) {
+      return id;
+    }
+    if (id != null) {
+      intervalProvider.clearInterval(id);
+    }
+    return void 0;
+  }
+  execute(state, delay) {
+    if (this.closed) {
+      return new Error("executing a cancelled action");
+    }
+    this.pending = false;
+    const error = this._execute(state, delay);
+    if (error) {
+      return error;
+    } else if (this.pending === false && this.id != null) {
+      this.id = this.recycleAsyncId(this.scheduler, this.id, null);
+    }
+  }
+  _execute(state, _delay) {
+    let errored = false;
+    let errorValue;
+    try {
+      this.work(state);
+    } catch (e) {
+      errored = true;
+      errorValue = e ? e : new Error("Scheduled action threw falsy error");
+    }
+    if (errored) {
+      this.unsubscribe();
+      return errorValue;
+    }
+  }
+  unsubscribe() {
+    if (!this.closed) {
+      const { id, scheduler } = this;
+      const { actions } = scheduler;
+      this.work = this.state = this.scheduler = null;
+      this.pending = false;
+      arrRemove(actions, this);
+      if (id != null) {
+        this.id = this.recycleAsyncId(scheduler, id, null);
+      }
+      this.delay = null;
+      super.unsubscribe();
+    }
+  }
+};
+
+// node_modules/rxjs/dist/esm/internal/Scheduler.js
+var Scheduler = class _Scheduler {
+  constructor(schedulerActionCtor, now = _Scheduler.now) {
+    this.schedulerActionCtor = schedulerActionCtor;
+    this.now = now;
+  }
+  schedule(work, delay = 0, state) {
+    return new this.schedulerActionCtor(this, work).schedule(state, delay);
+  }
+};
+Scheduler.now = dateTimestampProvider.now;
+
+// node_modules/rxjs/dist/esm/internal/scheduler/AsyncScheduler.js
+var AsyncScheduler = class extends Scheduler {
+  constructor(SchedulerAction, now = Scheduler.now) {
+    super(SchedulerAction, now);
+    this.actions = [];
+    this._active = false;
+  }
+  flush(action) {
+    const { actions } = this;
+    if (this._active) {
+      actions.push(action);
+      return;
+    }
+    let error;
+    this._active = true;
+    do {
+      if (error = action.execute(action.state, action.delay)) {
+        break;
+      }
+    } while (action = actions.shift());
+    this._active = false;
+    if (error) {
+      while (action = actions.shift()) {
+        action.unsubscribe();
+      }
+      throw error;
+    }
+  }
+};
+
+// node_modules/rxjs/dist/esm/internal/scheduler/async.js
+var asyncScheduler = new AsyncScheduler(AsyncAction);
+
 // node_modules/rxjs/dist/esm/internal/observable/empty.js
 var EMPTY = new Observable((subscriber) => subscriber.complete());
 
@@ -1885,6 +2042,47 @@ function concatMap(project, resultSelector) {
   return isFunction(resultSelector) ? mergeMap(project, resultSelector, 1) : mergeMap(project, 1);
 }
 
+// node_modules/rxjs/dist/esm/internal/operators/debounceTime.js
+function debounceTime(dueTime, scheduler = asyncScheduler) {
+  return operate((source, subscriber) => {
+    let activeTask = null;
+    let lastValue = null;
+    let lastTime = null;
+    const emit = () => {
+      if (activeTask) {
+        activeTask.unsubscribe();
+        activeTask = null;
+        const value = lastValue;
+        lastValue = null;
+        subscriber.next(value);
+      }
+    };
+    function emitWhenIdle() {
+      const targetTime = lastTime + dueTime;
+      const now = scheduler.now();
+      if (now < targetTime) {
+        activeTask = this.schedule(void 0, targetTime - now);
+        subscriber.add(activeTask);
+        return;
+      }
+      emit();
+    }
+    source.subscribe(createOperatorSubscriber(subscriber, (value) => {
+      lastValue = value;
+      lastTime = scheduler.now();
+      if (!activeTask) {
+        activeTask = scheduler.schedule(emitWhenIdle, dueTime);
+        subscriber.add(activeTask);
+      }
+    }, () => {
+      emit();
+      subscriber.complete();
+    }, void 0, () => {
+      lastValue = activeTask = null;
+    }));
+  });
+}
+
 // node_modules/rxjs/dist/esm/internal/operators/defaultIfEmpty.js
 function defaultIfEmpty(defaultValue) {
   return operate((source, subscriber) => {
@@ -1914,6 +2112,26 @@ function take(count) {
       }
     }));
   });
+}
+
+// node_modules/rxjs/dist/esm/internal/operators/distinctUntilChanged.js
+function distinctUntilChanged(comparator, keySelector = identity) {
+  comparator = comparator !== null && comparator !== void 0 ? comparator : defaultCompare;
+  return operate((source, subscriber) => {
+    let previousKey;
+    let first2 = true;
+    source.subscribe(createOperatorSubscriber(subscriber, (value) => {
+      const currentKey = keySelector(value);
+      if (first2 || !comparator(previousKey, currentKey)) {
+        first2 = false;
+        previousKey = currentKey;
+        subscriber.next(value);
+      }
+    }));
+  });
+}
+function defaultCompare(a, b) {
+  return a === b;
 }
 
 // node_modules/rxjs/dist/esm/internal/operators/throwIfEmpty.js
@@ -44551,83 +44769,246 @@ var ReactiveFormsModule = class _ReactiveFormsModule {
 })();
 
 // src/app/movie-form/movie-form.ts
-function MovieForm_div_19_div_1_div_3_Template(rf, ctx) {
+function MovieForm_button_20_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div");
-    \u0275\u0275element(1, "img", 16);
+    const _r1 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "button", 18);
+    \u0275\u0275listener("click", function MovieForm_button_20_Template_button_click_0_listener() {
+      \u0275\u0275restoreView(_r1);
+      const ctx_r1 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r1.clearSearch());
+    });
+    \u0275\u0275text(1, "\xD7");
     \u0275\u0275elementEnd();
-  }
-  if (rf & 2) {
-    const item_r1 = \u0275\u0275nextContext().$implicit;
-    \u0275\u0275advance();
-    \u0275\u0275property("src", item_r1.thumbnail, \u0275\u0275sanitizeUrl);
   }
 }
-function MovieForm_div_19_div_1_Template(rf, ctx) {
+function MovieForm_section_23_option_13_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div")(1, "p");
-    \u0275\u0275text(2);
-    \u0275\u0275elementEnd();
-    \u0275\u0275template(3, MovieForm_div_19_div_1_div_3_Template, 2, 1, "div", 13);
+    \u0275\u0275elementStart(0, "option", 34);
+    \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const item_r1 = ctx.$implicit;
+    const genre_r4 = ctx.$implicit;
+    \u0275\u0275property("value", genre_r4);
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate(genre_r4);
+  }
+}
+function MovieForm_section_23_option_20_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "option", 34);
+    \u0275\u0275text(1);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const decade_r5 = ctx.$implicit;
+    \u0275\u0275property("value", decade_r5);
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate1("", decade_r5, "s");
+  }
+}
+function MovieForm_section_23_div_30_img_1_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275element(0, "img", 41);
+  }
+  if (rf & 2) {
+    const item_r6 = \u0275\u0275nextContext().$implicit;
+    \u0275\u0275property("src", item_r6.thumbnail, \u0275\u0275sanitizeUrl)("alt", item_r6.title);
+  }
+}
+function MovieForm_section_23_div_30_div_7_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div", 42);
+    \u0275\u0275text(1);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const item_r6 = \u0275\u0275nextContext().$implicit;
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate1(" ", item_r6.genres.join(", "), " ");
+  }
+}
+function MovieForm_section_23_div_30_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div", 35);
+    \u0275\u0275template(1, MovieForm_section_23_div_30_img_1_Template, 1, 2, "img", 36);
+    \u0275\u0275elementStart(2, "div", 37)(3, "div", 38);
+    \u0275\u0275text(4);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(5, "div", 39);
+    \u0275\u0275text(6);
+    \u0275\u0275elementEnd();
+    \u0275\u0275template(7, MovieForm_section_23_div_30_div_7_Template, 2, 1, "div", 40);
+    \u0275\u0275elementEnd()();
+  }
+  if (rf & 2) {
+    const item_r6 = ctx.$implicit;
+    \u0275\u0275advance();
+    \u0275\u0275property("ngIf", item_r6.thumbnail);
+    \u0275\u0275advance(3);
+    \u0275\u0275textInterpolate(item_r6.title);
     \u0275\u0275advance(2);
-    \u0275\u0275textInterpolate2("", item_r1.title, " - ", item_r1.year);
+    \u0275\u0275textInterpolate(item_r6.year);
     \u0275\u0275advance();
-    \u0275\u0275property("ngIf", item_r1.thumbnail);
+    \u0275\u0275property("ngIf", item_r6.genres && item_r6.genres.length > 0);
   }
 }
-function MovieForm_div_19_Template(rf, ctx) {
+function MovieForm_section_23_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 14);
-    \u0275\u0275template(1, MovieForm_div_19_div_1_Template, 4, 3, "div", 15);
+    const _r3 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "section", 19)(1, "div", 6)(2, "h2");
+    \u0275\u0275text(3, "Search Results");
     \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(4, "p");
+    \u0275\u0275text(5);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(6, "div", 20)(7, "div", 21)(8, "label", 22);
+    \u0275\u0275text(9, "Genre:");
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(10, "select", 23);
+    \u0275\u0275twoWayListener("ngModelChange", function MovieForm_section_23_Template_select_ngModelChange_10_listener($event) {
+      \u0275\u0275restoreView(_r3);
+      const ctx_r1 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r1.selectedGenre, $event) || (ctx_r1.selectedGenre = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275listener("change", function MovieForm_section_23_Template_select_change_10_listener() {
+      \u0275\u0275restoreView(_r3);
+      const ctx_r1 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r1.onGenreChange());
+    });
+    \u0275\u0275elementStart(11, "option", 24);
+    \u0275\u0275text(12, "All Genres");
+    \u0275\u0275elementEnd();
+    \u0275\u0275template(13, MovieForm_section_23_option_13_Template, 2, 2, "option", 25);
+    \u0275\u0275elementEnd()();
+    \u0275\u0275elementStart(14, "div", 21)(15, "label", 26);
+    \u0275\u0275text(16, "Decade:");
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(17, "select", 27);
+    \u0275\u0275twoWayListener("ngModelChange", function MovieForm_section_23_Template_select_ngModelChange_17_listener($event) {
+      \u0275\u0275restoreView(_r3);
+      const ctx_r1 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r1.selectedDecade, $event) || (ctx_r1.selectedDecade = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275listener("change", function MovieForm_section_23_Template_select_change_17_listener() {
+      \u0275\u0275restoreView(_r3);
+      const ctx_r1 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r1.onDecadeChange());
+    });
+    \u0275\u0275elementStart(18, "option", 24);
+    \u0275\u0275text(19, "All Decades");
+    \u0275\u0275elementEnd();
+    \u0275\u0275template(20, MovieForm_section_23_option_20_Template, 2, 2, "option", 25);
+    \u0275\u0275elementEnd()();
+    \u0275\u0275elementStart(21, "div", 21)(22, "label", 28);
+    \u0275\u0275text(23, "Sort by:");
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(24, "select", 29);
+    \u0275\u0275twoWayListener("ngModelChange", function MovieForm_section_23_Template_select_ngModelChange_24_listener($event) {
+      \u0275\u0275restoreView(_r3);
+      const ctx_r1 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r1.sortBy, $event) || (ctx_r1.sortBy = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275listener("change", function MovieForm_section_23_Template_select_change_24_listener() {
+      \u0275\u0275restoreView(_r3);
+      const ctx_r1 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r1.onSortChange());
+    });
+    \u0275\u0275elementStart(25, "option", 30);
+    \u0275\u0275text(26, "Title (A-Z)");
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(27, "option", 31);
+    \u0275\u0275text(28, "Year (Newest First)");
+    \u0275\u0275elementEnd()()()();
+    \u0275\u0275elementStart(29, "div", 32);
+    \u0275\u0275template(30, MovieForm_section_23_div_30_Template, 8, 4, "div", 33);
+    \u0275\u0275elementEnd()()();
   }
   if (rf & 2) {
     const ctx_r1 = \u0275\u0275nextContext();
-    \u0275\u0275advance();
-    \u0275\u0275property("ngForOf", ctx_r1.searchResults);
+    \u0275\u0275advance(5);
+    \u0275\u0275textInterpolate2("", ctx_r1.filteredResults.length, " result", ctx_r1.filteredResults.length !== 1 ? "s" : "", " found");
+    \u0275\u0275advance(5);
+    \u0275\u0275twoWayProperty("ngModel", ctx_r1.selectedGenre);
+    \u0275\u0275advance(3);
+    \u0275\u0275property("ngForOf", ctx_r1.allGenres);
+    \u0275\u0275advance(4);
+    \u0275\u0275twoWayProperty("ngModel", ctx_r1.selectedDecade);
+    \u0275\u0275advance(3);
+    \u0275\u0275property("ngForOf", ctx_r1.getDecades());
+    \u0275\u0275advance(4);
+    \u0275\u0275twoWayProperty("ngModel", ctx_r1.sortBy);
+    \u0275\u0275advance(6);
+    \u0275\u0275property("ngForOf", ctx_r1.filteredResults);
   }
 }
-function MovieForm_div_26_div_1_div_5_Template(rf, ctx) {
+function MovieForm_section_24_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div");
-    \u0275\u0275element(1, "img", 16);
+    const _r7 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "section", 19)(1, "div", 6)(2, "div", 43)(3, "div", 44);
+    \u0275\u0275text(4, "\u{1F50D}");
     \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(5, "div", 45);
+    \u0275\u0275text(6);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(7, "button", 46);
+    \u0275\u0275listener("click", function MovieForm_section_24_Template_button_click_7_listener() {
+      \u0275\u0275restoreView(_r7);
+      const ctx_r1 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r1.clearSearch());
+    });
+    \u0275\u0275text(8, "Clear Search");
+    \u0275\u0275elementEnd()()()();
   }
   if (rf & 2) {
-    const item_r3 = \u0275\u0275nextContext().$implicit;
-    \u0275\u0275advance();
-    \u0275\u0275property("src", item_r3.thumbnail, \u0275\u0275sanitizeUrl);
+    const ctx_r1 = \u0275\u0275nextContext();
+    \u0275\u0275advance(6);
+    \u0275\u0275textInterpolate1('No results found for "', ctx_r1.name.value, '"');
   }
 }
-function MovieForm_div_26_div_1_Template(rf, ctx) {
+function MovieForm_div_31_div_1_img_1_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div")(1, "p");
-    \u0275\u0275text(2);
-    \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(3, "p");
+    \u0275\u0275element(0, "img", 41);
+  }
+  if (rf & 2) {
+    const item_r8 = \u0275\u0275nextContext().$implicit;
+    \u0275\u0275property("src", item_r8.thumbnail, \u0275\u0275sanitizeUrl)("alt", item_r8.title);
+  }
+}
+function MovieForm_div_31_div_1_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div", 35);
+    \u0275\u0275template(1, MovieForm_div_31_div_1_img_1_Template, 1, 2, "img", 36);
+    \u0275\u0275elementStart(2, "div", 37)(3, "div", 38);
     \u0275\u0275text(4);
     \u0275\u0275elementEnd();
-    \u0275\u0275template(5, MovieForm_div_26_div_1_div_5_Template, 2, 1, "div", 13);
+    \u0275\u0275elementStart(5, "div", 42);
+    \u0275\u0275text(6);
     \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(7, "div", 47);
+    \u0275\u0275text(8);
+    \u0275\u0275elementEnd()()();
   }
   if (rf & 2) {
-    const item_r3 = ctx.$implicit;
-    \u0275\u0275advance(2);
-    \u0275\u0275textInterpolate2("", item_r3.title, " - ", item_r3.platform);
-    \u0275\u0275advance(2);
-    \u0275\u0275textInterpolate1("Minutes Viewed: ", item_r3.minutes_viewed_billions, " (Billion)");
+    const item_r8 = ctx.$implicit;
     \u0275\u0275advance();
-    \u0275\u0275property("ngIf", item_r3.thumbnail);
+    \u0275\u0275property("ngIf", item_r8.thumbnail);
+    \u0275\u0275advance(3);
+    \u0275\u0275textInterpolate(item_r8.title);
+    \u0275\u0275advance(2);
+    \u0275\u0275textInterpolate(item_r8.platform);
+    \u0275\u0275advance(2);
+    \u0275\u0275textInterpolate1(" ", item_r8.minutes_viewed_billions, "B minutes viewed ");
   }
 }
-function MovieForm_div_26_Template(rf, ctx) {
+function MovieForm_div_31_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 14);
-    \u0275\u0275template(1, MovieForm_div_26_div_1_Template, 6, 4, "div", 15);
+    \u0275\u0275elementStart(0, "div", 32);
+    \u0275\u0275template(1, MovieForm_div_31_div_1_Template, 9, 4, "div", 33);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -44636,32 +45017,50 @@ function MovieForm_div_26_Template(rf, ctx) {
     \u0275\u0275property("ngForOf", ctx_r1.topRated);
   }
 }
-function MovieForm_div_33_div_3_Template(rf, ctx) {
+function MovieForm_div_40_img_2_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div");
-    \u0275\u0275element(1, "img", 16);
+    \u0275\u0275element(0, "img", 55);
+  }
+  if (rf & 2) {
+    const ctx_r1 = \u0275\u0275nextContext(2);
+    \u0275\u0275property("src", ctx_r1.randomMovie.thumbnail, \u0275\u0275sanitizeUrl)("alt", ctx_r1.randomMovie.title);
+  }
+}
+function MovieForm_div_40_div_8_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div", 56);
+    \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = \u0275\u0275nextContext(2);
     \u0275\u0275advance();
-    \u0275\u0275property("src", ctx_r1.randomMovie.thumbnail, \u0275\u0275sanitizeUrl);
+    \u0275\u0275textInterpolate1(" ", ctx_r1.randomMovie.genres.join(" \u2022 "), " ");
   }
 }
-function MovieForm_div_33_Template(rf, ctx) {
+function MovieForm_div_40_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div")(1, "p", 17);
-    \u0275\u0275text(2);
+    \u0275\u0275elementStart(0, "div", 48)(1, "div", 49);
+    \u0275\u0275template(2, MovieForm_div_40_img_2_Template, 1, 2, "img", 50);
+    \u0275\u0275elementStart(3, "div", 51)(4, "div", 52);
+    \u0275\u0275text(5);
     \u0275\u0275elementEnd();
-    \u0275\u0275template(3, MovieForm_div_33_div_3_Template, 2, 1, "div", 13);
+    \u0275\u0275elementStart(6, "div", 53);
+    \u0275\u0275text(7);
     \u0275\u0275elementEnd();
+    \u0275\u0275template(8, MovieForm_div_40_div_8_Template, 2, 1, "div", 54);
+    \u0275\u0275elementEnd()()();
   }
   if (rf & 2) {
     const ctx_r1 = \u0275\u0275nextContext();
     \u0275\u0275advance(2);
-    \u0275\u0275textInterpolate2("", ctx_r1.randomMovie.title, " - ", ctx_r1.randomMovie.year);
-    \u0275\u0275advance();
     \u0275\u0275property("ngIf", ctx_r1.randomMovie.thumbnail);
+    \u0275\u0275advance(3);
+    \u0275\u0275textInterpolate(ctx_r1.randomMovie.title);
+    \u0275\u0275advance(2);
+    \u0275\u0275textInterpolate(ctx_r1.randomMovie.year);
+    \u0275\u0275advance();
+    \u0275\u0275property("ngIf", ctx_r1.randomMovie.genres && ctx_r1.randomMovie.genres.length > 0);
   }
 }
 var MovieForm = class _MovieForm {
@@ -44671,6 +45070,12 @@ var MovieForm = class _MovieForm {
   movies = [];
   topRated = [];
   randomMovie = void 0;
+  // Filter and sort options
+  selectedGenre = "";
+  selectedDecade = "";
+  sortBy = "title";
+  allGenres = [];
+  filteredResults = [];
   constructor(http) {
     this.http = http;
   }
@@ -44679,8 +45084,13 @@ var MovieForm = class _MovieForm {
     this.ngOnChanges();
   }
   ngOnChanges() {
-    this.name.valueChanges.subscribe((x) => {
-      console.log(x);
+    this.name.valueChanges.pipe(debounceTime(300), distinctUntilChanged()).subscribe((value) => {
+      if (value && value.length > 0) {
+        this.search();
+      } else {
+        this.searchResults = [];
+        this.filteredResults = [];
+      }
     });
   }
   loadContent() {
@@ -44690,12 +45100,21 @@ var MovieForm = class _MovieForm {
   getMovies() {
     this.getAllMovies().subscribe((data) => {
       this.movies = data;
+      const genreSet = /* @__PURE__ */ new Set();
+      data.forEach((item) => {
+        if (item.genres && Array.isArray(item.genres)) {
+          item.genres.forEach((genre) => genreSet.add(genre));
+        }
+      });
+      this.allGenres = Array.from(genreSet).sort();
     });
   }
   getAllMovies() {
-    const files = ["movies2020.json", "movies-2010s.json", "movies-2000s.json", "movies-1990s.json", "movies-1980s.json"];
-    const requests = files.map((name) => this.http.get(`assets/${name}`));
-    return forkJoin(requests).pipe(map((results) => results.flat()));
+    return this.http.get("assets/movies-manifest.json").pipe(switchMap((manifest) => {
+      const allFiles = [...manifest.movieFiles, ...manifest.tvShowFiles];
+      const requests = allFiles.map((name) => this.http.get(`assets/${name}`));
+      return forkJoin(requests).pipe(map((results) => results.flat()));
+    }));
   }
   getTopRated() {
     this.http.get("assets/top-rated.json").subscribe((data) => {
@@ -44703,182 +45122,284 @@ var MovieForm = class _MovieForm {
     });
   }
   search() {
-    this.searchResults = this.name.value ? this.movies.filter((x) => x.title.toLowerCase().includes(this.name.value.toLowerCase())) : [];
+    if (!this.name.value || this.name.value.trim().length === 0) {
+      this.searchResults = [];
+      this.filteredResults = [];
+      return;
+    }
+    const searchTerm = this.name.value.toLowerCase().trim();
+    this.searchResults = this.movies.filter((x) => x.title.toLowerCase().includes(searchTerm));
+    this.applyFilters();
+  }
+  clearSearch() {
+    this.name.setValue("");
+    this.searchResults = [];
+    this.filteredResults = [];
+    this.selectedGenre = "";
+    this.selectedDecade = "";
+    this.sortBy = "title";
+  }
+  applyFilters() {
+    if (this.searchResults.length === 0) {
+      this.filteredResults = [];
+      return;
+    }
+    let results = [...this.searchResults];
+    if (this.selectedGenre) {
+      results = results.filter((item) => item.genres && Array.isArray(item.genres) && item.genres.includes(this.selectedGenre));
+    }
+    if (this.selectedDecade) {
+      const decadeStart = parseInt(this.selectedDecade);
+      const decadeEnd = decadeStart + 9;
+      results = results.filter((item) => item.year >= decadeStart && item.year <= decadeEnd);
+    }
+    results.sort((a, b) => {
+      if (this.sortBy === "title") {
+        return a.title.localeCompare(b.title);
+      } else if (this.sortBy === "year") {
+        return b.year - a.year;
+      }
+      return 0;
+    });
+    this.filteredResults = results;
+  }
+  onGenreChange() {
+    this.applyFilters();
+  }
+  onDecadeChange() {
+    this.applyFilters();
+  }
+  onSortChange() {
+    this.applyFilters();
+  }
+  onKeyDown(event) {
+    if (event.key === "Enter") {
+      this.search();
+    }
   }
   getRandomMovie() {
     const index = Math.floor(Math.random() * this.movies.length);
     this.randomMovie = this.movies[index];
   }
+  getDecades() {
+    const decades = /* @__PURE__ */ new Set();
+    this.movies.forEach((item) => {
+      const decade = Math.floor(item.year / 10) * 10;
+      decades.add(decade);
+    });
+    return Array.from(decades).sort((a, b) => b - a);
+  }
   static \u0275fac = function MovieForm_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _MovieForm)(\u0275\u0275directiveInject(HttpClient));
   };
-  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _MovieForm, selectors: [["app-movie-form"]], standalone: false, features: [\u0275\u0275NgOnChangesFeature], decls: 38, vars: 4, consts: [[1, "nav"], [1, "logo"], ["href", "#"], [1, "hero"], [1, "container"], [1, "input-group"], ["id", "name", "type", "text", "placeholder", "Enter Movie/TV Show Title", 3, "formControl"], [1, "btn", 2, "margin-top", "15px", 3, "click"], [1, "section", "gray"], ["class", "results", 4, "ngIf"], [1, "section", "showcase"], [2, "margin-bottom", "10px"], [1, "btn", "secondary", 2, "margin-bottom", "10px", 3, "click"], [4, "ngIf"], [1, "results"], [4, "ngFor", "ngForOf"], [3, "src"], [2, "font-size", "20px"]], template: function MovieForm_Template(rf, ctx) {
+  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _MovieForm, selectors: [["app-movie-form"]], standalone: false, features: [\u0275\u0275NgOnChangesFeature], decls: 45, vars: 6, consts: [[1, "nav"], [1, "logo"], ["href", "#search"], ["href", "#top-rated"], ["href", "#discover"], ["id", "search", 1, "hero"], [1, "container"], [1, "input-group"], [1, "search-container"], ["id", "name", "type", "text", "placeholder", "Search for movies or TV shows...", 3, "keydown", "formControl"], ["class", "btn-clear", "title", "Clear search", 3, "click", 4, "ngIf"], [1, "btn", 3, "click"], ["class", "section gray", 4, "ngIf"], ["id", "top-rated", 1, "section", "showcase"], ["class", "results", 4, "ngIf"], ["id", "discover", 1, "section", "gray"], [1, "btn", "secondary", 3, "click"], ["class", "random-movie-container", 4, "ngIf"], ["title", "Clear search", 1, "btn-clear", 3, "click"], [1, "section", "gray"], [1, "filters"], [1, "filter-group"], ["for", "genre-filter"], ["id", "genre-filter", 1, "filter-select", 3, "ngModelChange", "change", "ngModel"], ["value", ""], [3, "value", 4, "ngFor", "ngForOf"], ["for", "decade-filter"], ["id", "decade-filter", 1, "filter-select", 3, "ngModelChange", "change", "ngModel"], ["for", "sort-filter"], ["id", "sort-filter", 1, "filter-select", 3, "ngModelChange", "change", "ngModel"], ["value", "title"], ["value", "year"], [1, "results"], ["class", "movie-card", 4, "ngFor", "ngForOf"], [3, "value"], [1, "movie-card"], ["class", "movie-card-image", "onerror", "this.style.display='none'", 3, "src", "alt", 4, "ngIf"], [1, "movie-card-content"], [1, "movie-card-title"], [1, "movie-card-year"], ["class", "movie-card-platform", 4, "ngIf"], ["onerror", "this.style.display='none'", 1, "movie-card-image", 3, "src", "alt"], [1, "movie-card-platform"], [1, "empty-state"], [1, "empty-state-icon"], [1, "empty-state-text"], [1, "btn", "secondary", 2, "margin-top", "20px", 3, "click"], [1, "movie-card-stats"], [1, "random-movie-container"], [1, "random-movie-card"], ["class", "random-movie-image", "onerror", "this.style.display='none'", 3, "src", "alt", 4, "ngIf"], [1, "random-movie-info"], [1, "random-movie-title"], [1, "random-movie-year"], ["class", "movie-card-platform", "style", "margin-top: 12px;", 4, "ngIf"], ["onerror", "this.style.display='none'", 1, "random-movie-image", 3, "src", "alt"], [1, "movie-card-platform", 2, "margin-top", "12px"]], template: function MovieForm_Template(rf, ctx) {
     if (rf & 1) {
       \u0275\u0275elementStart(0, "body")(1, "header", 0)(2, "div", 1);
-      \u0275\u0275text(3, "\u{1F34F}");
+      \u0275\u0275text(3, "\u{1F37F}");
       \u0275\u0275elementEnd();
       \u0275\u0275elementStart(4, "nav")(5, "a", 2);
-      \u0275\u0275text(6, "Test");
+      \u0275\u0275text(6, "Search");
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(7, "a", 3);
+      \u0275\u0275text(8, "Top Rated");
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(9, "a", 4);
+      \u0275\u0275text(10, "Discover");
       \u0275\u0275elementEnd()()();
-      \u0275\u0275elementStart(7, "section", 3)(8, "div", 4)(9, "h1");
-      \u0275\u0275text(10, "Movie & TV Show Database");
+      \u0275\u0275elementStart(11, "section", 5)(12, "div", 6)(13, "h1");
+      \u0275\u0275text(14, "FlickBase");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(11, "div", 5);
-      \u0275\u0275element(12, "input", 6);
+      \u0275\u0275elementStart(15, "p");
+      \u0275\u0275text(16, "Discover your next favorite film or series");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(13, "button", 7);
-      \u0275\u0275listener("click", function MovieForm_Template_button_click_13_listener() {
+      \u0275\u0275elementStart(17, "div", 7)(18, "div", 8)(19, "input", 9);
+      \u0275\u0275listener("keydown", function MovieForm_Template_input_keydown_19_listener($event) {
+        return ctx.onKeyDown($event);
+      });
+      \u0275\u0275elementEnd();
+      \u0275\u0275template(20, MovieForm_button_20_Template, 2, 0, "button", 10);
+      \u0275\u0275elementEnd()();
+      \u0275\u0275elementStart(21, "button", 11);
+      \u0275\u0275listener("click", function MovieForm_Template_button_click_21_listener() {
         return ctx.search();
       });
-      \u0275\u0275text(14, "Search");
+      \u0275\u0275text(22, "Search");
       \u0275\u0275elementEnd()()();
-      \u0275\u0275elementStart(15, "section", 8)(16, "div", 4)(17, "h2");
-      \u0275\u0275text(18, "A curated list of results");
+      \u0275\u0275template(23, MovieForm_section_23_Template, 31, 8, "section", 12)(24, MovieForm_section_24_Template, 9, 1, "section", 12);
+      \u0275\u0275elementStart(25, "section", 13)(26, "div", 6)(27, "h2");
+      \u0275\u0275text(28, "Top Rated");
       \u0275\u0275elementEnd();
-      \u0275\u0275template(19, MovieForm_div_19_Template, 2, 1, "div", 9);
+      \u0275\u0275elementStart(29, "p");
+      \u0275\u0275text(30, "Most watched across all streaming services");
+      \u0275\u0275elementEnd();
+      \u0275\u0275template(31, MovieForm_div_31_Template, 2, 1, "div", 14);
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(20, "section", 10)(21, "div", 4)(22, "h2");
-      \u0275\u0275text(23, "Top Rated");
+      \u0275\u0275elementStart(32, "section", 15)(33, "div", 6)(34, "h2");
+      \u0275\u0275text(35, "Not sure what to watch?");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(24, "p");
-      \u0275\u0275text(25, "All Streaming Services");
+      \u0275\u0275elementStart(36, "p");
+      \u0275\u0275text(37, "Let us surprise you with a random pick");
       \u0275\u0275elementEnd();
-      \u0275\u0275template(26, MovieForm_div_26_Template, 2, 1, "div", 9);
-      \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(27, "section", 8)(28, "div", 4)(29, "h2", 11);
-      \u0275\u0275text(30, "Unsure?");
-      \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(31, "button", 12);
-      \u0275\u0275listener("click", function MovieForm_Template_button_click_31_listener() {
+      \u0275\u0275elementStart(38, "button", 16);
+      \u0275\u0275listener("click", function MovieForm_Template_button_click_38_listener() {
         return ctx.getRandomMovie();
       });
-      \u0275\u0275text(32, "Random Suggestion");
+      \u0275\u0275text(39, "Get Random Suggestion");
       \u0275\u0275elementEnd();
-      \u0275\u0275template(33, MovieForm_div_33_Template, 4, 3, "div", 13);
+      \u0275\u0275template(40, MovieForm_div_40_Template, 9, 4, "div", 17);
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(34, "footer")(35, "div", 4)(36, "p");
-      \u0275\u0275text(37, "\xA9 2025 Ben130 - Inspired by Apple Inc.");
+      \u0275\u0275elementStart(41, "footer")(42, "div", 6)(43, "p");
+      \u0275\u0275text(44, "\xA9 2025 Ben130 - Inspired by Apple Inc.");
       \u0275\u0275elementEnd()()()();
     }
     if (rf & 2) {
-      \u0275\u0275advance(12);
+      \u0275\u0275advance(19);
       \u0275\u0275property("formControl", ctx.name);
-      \u0275\u0275advance(7);
+      \u0275\u0275advance();
+      \u0275\u0275property("ngIf", ctx.name.value);
+      \u0275\u0275advance(3);
       \u0275\u0275property("ngIf", ctx.searchResults && ctx.searchResults.length > 0);
+      \u0275\u0275advance();
+      \u0275\u0275property("ngIf", ctx.name.value && ctx.searchResults.length === 0);
       \u0275\u0275advance(7);
       \u0275\u0275property("ngIf", ctx.topRated && ctx.topRated.length > 0);
-      \u0275\u0275advance(7);
+      \u0275\u0275advance(9);
       \u0275\u0275property("ngIf", ctx.randomMovie);
     }
-  }, dependencies: [NgForOf, NgIf, DefaultValueAccessor, NgControlStatus, FormControlDirective], styles: ['\n\n*[_ngcontent-%COMP%] {\n  margin: 0;\n  padding: 0;\n  box-sizing: border-box;\n}\nbody[_ngcontent-%COMP%] {\n  font-family:\n    -apple-system,\n    BlinkMacSystemFont,\n    "Segoe UI",\n    Roboto,\n    Helvetica,\n    Arial,\n    sans-serif;\n  color: #1d1d1f;\n  background-color: #fff;\n}\na[_ngcontent-%COMP%] {\n  text-decoration: none;\n  color: inherit;\n}\n.container[_ngcontent-%COMP%] {\n  width: 90%;\n  max-width: 1200px;\n  margin: 0 auto;\n}\n.nav[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 20px 5%;\n  background-color: #f8f8f8;\n  border-bottom: 1px solid #e5e5e5;\n}\n.nav[_ngcontent-%COMP%]   a[_ngcontent-%COMP%] {\n  margin-left: 20px;\n  font-weight: 500;\n}\n.hero[_ngcontent-%COMP%] {\n  padding: 100px 20px;\n  text-align: center;\n  background-color: #fff;\n}\n.hero[_ngcontent-%COMP%]   h1[_ngcontent-%COMP%] {\n  font-size: 3rem;\n  margin-bottom: 20px;\n}\n.hero[_ngcontent-%COMP%]   p[_ngcontent-%COMP%] {\n  font-size: 1.2rem;\n  color: #555;\n  margin-bottom: 30px;\n}\n.btn[_ngcontent-%COMP%] {\n  padding: 12px 28px;\n  background-color: #0071e3;\n  color: white;\n  border-radius: 30px;\n  font-weight: 500;\n  font-size: 17px;\n  border: 1px solid;\n}\n.btn.secondary[_ngcontent-%COMP%] {\n  background-color: transparent;\n  color: #0071e3;\n  border: 1px solid #0071e3;\n}\n.section[_ngcontent-%COMP%] {\n  padding: 80px 20px;\n  text-align: center;\n}\n.gray[_ngcontent-%COMP%] {\n  background-color: #f5f5f7;\n}\n.features[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 40px;\n  margin-top: 40px;\n}\n.feature[_ngcontent-%COMP%]   h3[_ngcontent-%COMP%] {\n  font-size: 1.5rem;\n  margin-bottom: 10px;\n}\n.feature[_ngcontent-%COMP%]   p[_ngcontent-%COMP%] {\n  color: #666;\n}\n@media (min-width: 768px) {\n  .features[_ngcontent-%COMP%] {\n    flex-direction: row;\n    justify-content: space-between;\n  }\n}\n.showcase[_ngcontent-%COMP%]   img[_ngcontent-%COMP%] {\n  max-width: 100%;\n  height: auto;\n  margin-bottom: 30px;\n}\n.showcase[_ngcontent-%COMP%]   h2[_ngcontent-%COMP%] {\n  font-size: 2rem;\n  margin-bottom: 15px;\n}\n.showcase[_ngcontent-%COMP%]   p[_ngcontent-%COMP%] {\n  color: #555;\n  margin-bottom: 25px;\n}\n.benefits[_ngcontent-%COMP%] {\n  list-style: none;\n  font-size: 1.1rem;\n  color: #444;\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 0;\n}\n.benefits[_ngcontent-%COMP%]   li[_ngcontent-%COMP%] {\n  margin-bottom: 15px;\n}\nfooter[_ngcontent-%COMP%] {\n  background-color: #fafafa;\n  padding: 40px 0;\n  text-align: center;\n  font-size: 0.9rem;\n  color: #888;\n}\n.input-group[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  margin-top: 40px;\n}\n.input-group[_ngcontent-%COMP%]   label[_ngcontent-%COMP%] {\n  font-size: 1rem;\n  margin-bottom: 8px;\n  color: #333;\n}\n.input-group[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  width: 100%;\n  max-width: 400px;\n  padding: 14px 16px;\n  font-size: 1rem;\n  border: 1px solid #ccc;\n  border-radius: 12px;\n  background-color: #f5f5f7;\n  transition: border-color 0.2s ease, box-shadow 0.2s ease;\n}\n.input-group[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus {\n  outline: none;\n  border-color: #0071e3;\n  box-shadow: 0 0 0 2px rgba(0, 113, 227, 0.2);\n}\n.results[_ngcontent-%COMP%] {\n  display: flex;\n  margin-top: 15px;\n  font-size: 20px;\n  flex-wrap: wrap;\n  justify-content: space-between;\n}\n/*# sourceMappingURL=movie-form.css.map */'] });
+  }, dependencies: [NgForOf, NgIf, NgSelectOption, \u0275NgSelectMultipleOption, DefaultValueAccessor, SelectControlValueAccessor, NgControlStatus, FormControlDirective, NgModel], styles: ['\n\n*[_ngcontent-%COMP%] {\n  margin: 0;\n  padding: 0;\n  box-sizing: border-box;\n}\nbody[_ngcontent-%COMP%] {\n  font-family:\n    -apple-system,\n    BlinkMacSystemFont,\n    "SF Pro Display",\n    "SF Pro Text",\n    "Segoe UI",\n    Roboto,\n    Helvetica,\n    Arial,\n    sans-serif;\n  color: #1d1d1f;\n  background-color: #000000;\n  line-height: 1.47059;\n  font-weight: 400;\n  letter-spacing: -0.022em;\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n  margin: 0;\n  padding: 0;\n}\na[_ngcontent-%COMP%] {\n  text-decoration: none;\n  color: inherit;\n  transition: opacity 0.3s ease;\n}\na[_ngcontent-%COMP%]:hover {\n  opacity: 0.7;\n}\n.container[_ngcontent-%COMP%] {\n  width: 90%;\n  max-width: 1200px;\n  margin: 0 auto;\n}\n.nav[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 12px 5%;\n  background-color: rgba(0, 0, 0, 0.8);\n  backdrop-filter: saturate(180%) blur(20px);\n  -webkit-backdrop-filter: saturate(180%) blur(20px);\n  border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);\n  position: sticky;\n  top: 0;\n  left: 0;\n  right: 0;\n  z-index: 1000;\n  transition: background-color 0.3s ease;\n  margin: 0;\n}\n.nav[_ngcontent-%COMP%]:hover {\n  background-color: rgba(0, 0, 0, 0.95);\n}\n.logo[_ngcontent-%COMP%] {\n  font-size: 24px;\n  font-weight: 600;\n  cursor: pointer;\n  transition: transform 0.2s ease;\n}\n.logo[_ngcontent-%COMP%]:hover {\n  transform: scale(1.1);\n}\n.nav[_ngcontent-%COMP%]   nav[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 30px;\n}\n.nav[_ngcontent-%COMP%]   a[_ngcontent-%COMP%] {\n  font-size: 12px;\n  font-weight: 400;\n  color: #f5f5f7;\n  letter-spacing: -0.01em;\n  transition: opacity 0.2s ease;\n  position: relative;\n}\n.nav[_ngcontent-%COMP%]   a[_ngcontent-%COMP%]::after {\n  content: "";\n  position: absolute;\n  bottom: -4px;\n  left: 0;\n  width: 0;\n  height: 1px;\n  background-color: #f5f5f7;\n  transition: width 0.3s ease;\n}\n.nav[_ngcontent-%COMP%]   a[_ngcontent-%COMP%]:hover::after {\n  width: 100%;\n}\n.hero[_ngcontent-%COMP%] {\n  padding: 120px 20px 100px;\n  text-align: center;\n  background:\n    linear-gradient(\n      to bottom,\n      #000000 0%,\n      #1a1a1a 100%);\n}\n.hero[_ngcontent-%COMP%]   h1[_ngcontent-%COMP%] {\n  font-size: 4rem;\n  font-weight: 600;\n  letter-spacing: -0.03em;\n  margin-bottom: 10px;\n  color: #f5f5f7;\n  animation: _ngcontent-%COMP%_fadeInUp 0.8s ease-out;\n}\n.hero[_ngcontent-%COMP%]   p[_ngcontent-%COMP%] {\n  font-size: 1.4rem;\n  color: #a1a1a6;\n  margin-bottom: 50px;\n  font-weight: 400;\n  animation: _ngcontent-%COMP%_fadeInUp 0.8s ease-out 0.2s both;\n}\n@keyframes _ngcontent-%COMP%_fadeInUp {\n  from {\n    opacity: 0;\n    transform: translateY(20px);\n  }\n  to {\n    opacity: 1;\n    transform: translateY(0);\n  }\n}\n.btn[_ngcontent-%COMP%] {\n  padding: 14px 32px;\n  background-color: #0071e3;\n  color: white;\n  border-radius: 980px;\n  font-weight: 400;\n  font-size: 17px;\n  border: none;\n  cursor: pointer;\n  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);\n  letter-spacing: -0.01em;\n  display: inline-block;\n  position: relative;\n  overflow: hidden;\n}\n.btn[_ngcontent-%COMP%]::before {\n  content: "";\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  width: 0;\n  height: 0;\n  border-radius: 50%;\n  background: rgba(255, 255, 255, 0.3);\n  transform: translate(-50%, -50%);\n  transition: width 0.6s, height 0.6s;\n}\n.btn[_ngcontent-%COMP%]:hover::before {\n  width: 300px;\n  height: 300px;\n}\n.btn[_ngcontent-%COMP%]:hover {\n  background-color: #0077ed;\n  transform: translateY(-2px);\n  box-shadow: 0 8px 20px rgba(0, 113, 227, 0.3);\n}\n.btn[_ngcontent-%COMP%]:active {\n  transform: translateY(0);\n  box-shadow: 0 4px 12px rgba(0, 113, 227, 0.2);\n}\n.btn.secondary[_ngcontent-%COMP%] {\n  background-color: transparent;\n  color: #0071e3;\n  border: 1px solid #0071e3;\n}\n.btn.secondary[_ngcontent-%COMP%]:hover {\n  background-color: rgba(0, 113, 227, 0.1);\n  box-shadow: 0 8px 20px rgba(0, 113, 227, 0.15);\n}\n.section[_ngcontent-%COMP%] {\n  padding: 100px 20px;\n  text-align: center;\n}\n.section[_ngcontent-%COMP%]   h2[_ngcontent-%COMP%] {\n  font-size: 3rem;\n  font-weight: 600;\n  letter-spacing: -0.03em;\n  margin-bottom: 10px;\n  color: #f5f5f7;\n}\n.section[_ngcontent-%COMP%]   p[_ngcontent-%COMP%] {\n  font-size: 1.2rem;\n  color: #a1a1a6;\n  margin-bottom: 50px;\n}\n.gray[_ngcontent-%COMP%] {\n  background-color: #1a1a1a;\n}\n.features[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 40px;\n  margin-top: 40px;\n}\n.feature[_ngcontent-%COMP%]   h3[_ngcontent-%COMP%] {\n  font-size: 1.5rem;\n  margin-bottom: 10px;\n  font-weight: 600;\n}\n.feature[_ngcontent-%COMP%]   p[_ngcontent-%COMP%] {\n  color: #a1a1a6;\n  font-size: 1.1rem;\n}\n@media (min-width: 768px) {\n  .features[_ngcontent-%COMP%] {\n    flex-direction: row;\n    justify-content: space-between;\n  }\n}\n.showcase[_ngcontent-%COMP%]   img[_ngcontent-%COMP%] {\n  max-width: 100%;\n  height: auto;\n  margin-bottom: 30px;\n  border-radius: 12px;\n}\n.showcase[_ngcontent-%COMP%] {\n  background-color: #000000;\n}\n.showcase[_ngcontent-%COMP%]   h2[_ngcontent-%COMP%] {\n  font-size: 3rem;\n  font-weight: 600;\n  letter-spacing: -0.03em;\n  margin-bottom: 10px;\n  color: #f5f5f7;\n}\n.showcase[_ngcontent-%COMP%]   p[_ngcontent-%COMP%] {\n  color: #a1a1a6;\n  font-size: 1.2rem;\n  margin-bottom: 50px;\n}\n.benefits[_ngcontent-%COMP%] {\n  list-style: none;\n  font-size: 1.1rem;\n  color: #f5f5f7;\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 0;\n}\n.benefits[_ngcontent-%COMP%]   li[_ngcontent-%COMP%] {\n  margin-bottom: 15px;\n  line-height: 1.6;\n}\nfooter[_ngcontent-%COMP%] {\n  background-color: #1a1a1a;\n  padding: 50px 0;\n  text-align: center;\n  font-size: 0.9rem;\n  color: #a1a1a6;\n  border-top: 0.5px solid rgba(255, 255, 255, 0.1);\n}\n.input-group[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  margin-top: 50px;\n  animation: _ngcontent-%COMP%_fadeInUp 0.8s ease-out 0.4s both;\n}\n.input-group[_ngcontent-%COMP%]   label[_ngcontent-%COMP%] {\n  font-size: 1rem;\n  margin-bottom: 8px;\n  color: #1d1d1f;\n  font-weight: 500;\n}\n.input-group[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  width: 100%;\n  max-width: 500px;\n  padding: 16px 20px;\n  font-size: 17px;\n  border: 1px solid rgba(255, 255, 255, 0.2);\n  border-radius: 12px;\n  background-color: rgba(255, 255, 255, 0.1);\n  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);\n  color: #f5f5f7;\n  font-weight: 400;\n  letter-spacing: -0.01em;\n}\n.input-group[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]::placeholder {\n  color: #a1a1a6;\n}\n.input-group[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus {\n  outline: none;\n  border-color: #0071e3;\n  box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.25);\n  background-color: rgba(255, 255, 255, 0.15);\n  transform: translateY(-2px);\n}\n.input-group[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:hover {\n  border-color: rgba(255, 255, 255, 0.3);\n  background-color: rgba(255, 255, 255, 0.12);\n}\n.input-group[_ngcontent-%COMP%]    + .btn[_ngcontent-%COMP%] {\n  margin-top: 10px;\n}\n.search-container[_ngcontent-%COMP%] {\n  position: relative;\n  width: 100%;\n  max-width: 500px;\n  margin: 0 auto;\n}\n.btn-clear[_ngcontent-%COMP%] {\n  position: absolute;\n  right: 12px;\n  top: 50%;\n  transform: translateY(-50%);\n  background: transparent;\n  border: none;\n  color: #a1a1a6;\n  font-size: 24px;\n  cursor: pointer;\n  padding: 0;\n  width: 30px;\n  height: 30px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: 50%;\n  transition: all 0.2s ease;\n}\n.btn-clear[_ngcontent-%COMP%]:hover {\n  background-color: rgba(255, 255, 255, 0.1);\n  color: #f5f5f7;\n}\n.filters[_ngcontent-%COMP%] {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 20px;\n  justify-content: center;\n  margin-bottom: 40px;\n  padding: 20px;\n  background-color: rgba(255, 255, 255, 0.05);\n  border-radius: 12px;\n  border: 0.5px solid rgba(255, 255, 255, 0.1);\n}\n.filter-group[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  min-width: 150px;\n}\n.filter-group[_ngcontent-%COMP%]   label[_ngcontent-%COMP%] {\n  font-size: 0.9rem;\n  color: #a1a1a6;\n  font-weight: 500;\n}\n.filter-select[_ngcontent-%COMP%] {\n  padding: 10px 14px;\n  font-size: 15px;\n  border: 1px solid rgba(255, 255, 255, 0.2);\n  border-radius: 8px;\n  background-color: rgba(255, 255, 255, 0.1);\n  color: #f5f5f7;\n  cursor: pointer;\n  transition: all 0.3s ease;\n  font-family: inherit;\n}\n.filter-select[_ngcontent-%COMP%]:hover {\n  border-color: rgba(255, 255, 255, 0.3);\n  background-color: rgba(255, 255, 255, 0.12);\n}\n.filter-select[_ngcontent-%COMP%]:focus {\n  outline: none;\n  border-color: #0071e3;\n  box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.2);\n  background-color: rgba(255, 255, 255, 0.15);\n}\n.filter-select[_ngcontent-%COMP%]   option[_ngcontent-%COMP%] {\n  background-color: #1a1a1a;\n  color: #f5f5f7;\n}\n.results[_ngcontent-%COMP%] {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));\n  gap: 30px;\n  margin-top: 50px;\n  padding: 0;\n}\n.movie-card[_ngcontent-%COMP%] {\n  background: #1a1a1a;\n  border-radius: 18px;\n  overflow: hidden;\n  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);\n  border: 0.5px solid rgba(255, 255, 255, 0.1);\n  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);\n  cursor: pointer;\n  position: relative;\n  animation: _ngcontent-%COMP%_fadeInUp 0.6s ease-out both;\n}\n.movie-card[_ngcontent-%COMP%]:nth-child(1) {\n  animation-delay: 0.1s;\n}\n.movie-card[_ngcontent-%COMP%]:nth-child(2) {\n  animation-delay: 0.2s;\n}\n.movie-card[_ngcontent-%COMP%]:nth-child(3) {\n  animation-delay: 0.3s;\n}\n.movie-card[_ngcontent-%COMP%]:nth-child(4) {\n  animation-delay: 0.4s;\n}\n.movie-card[_ngcontent-%COMP%]:nth-child(5) {\n  animation-delay: 0.5s;\n}\n.movie-card[_ngcontent-%COMP%]:nth-child(6) {\n  animation-delay: 0.6s;\n}\n.movie-card[_ngcontent-%COMP%]:hover {\n  transform: translateY(-8px) scale(1.02);\n  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8);\n  border-color: rgba(255, 255, 255, 0.2);\n  background: #242424;\n}\n.movie-card-image[_ngcontent-%COMP%] {\n  width: 100%;\n  aspect-ratio: 2/3;\n  object-fit: cover;\n  display: block;\n  background:\n    linear-gradient(\n      135deg,\n      #1a1a1a 0%,\n      #2a2a2a 100%);\n}\n.movie-card-content[_ngcontent-%COMP%] {\n  padding: 20px;\n}\n.movie-card-title[_ngcontent-%COMP%] {\n  font-size: 1.1rem;\n  font-weight: 600;\n  color: #f5f5f7;\n  margin-bottom: 8px;\n  letter-spacing: -0.01em;\n  line-height: 1.3;\n}\n.movie-card-year[_ngcontent-%COMP%] {\n  font-size: 0.9rem;\n  color: #a1a1a6;\n  font-weight: 400;\n}\n.movie-card-platform[_ngcontent-%COMP%] {\n  font-size: 0.85rem;\n  color: #a1a1a6;\n  margin-top: 4px;\n  font-weight: 400;\n}\n.movie-card-stats[_ngcontent-%COMP%] {\n  font-size: 0.85rem;\n  color: #0071e3;\n  margin-top: 8px;\n  font-weight: 500;\n}\n.random-movie-container[_ngcontent-%COMP%] {\n  margin-top: 40px;\n  animation: _ngcontent-%COMP%_fadeInUp 0.8s ease-out;\n}\n.random-movie-card[_ngcontent-%COMP%] {\n  max-width: 400px;\n  margin: 0 auto;\n  background: #1a1a1a;\n  border-radius: 18px;\n  overflow: hidden;\n  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);\n  border: 0.5px solid rgba(255, 255, 255, 0.1);\n  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);\n}\n.random-movie-card[_ngcontent-%COMP%]:hover {\n  transform: translateY(-4px);\n  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8);\n  border-color: rgba(255, 255, 255, 0.2);\n  background: #242424;\n}\n.random-movie-image[_ngcontent-%COMP%] {\n  width: 100%;\n  aspect-ratio: 2/3;\n  object-fit: cover;\n  display: block;\n  background:\n    linear-gradient(\n      135deg,\n      #1a1a1a 0%,\n      #2a2a2a 100%);\n}\n.random-movie-info[_ngcontent-%COMP%] {\n  padding: 24px;\n  text-align: center;\n}\n.random-movie-title[_ngcontent-%COMP%] {\n  font-size: 1.4rem;\n  font-weight: 600;\n  color: #f5f5f7;\n  margin-bottom: 8px;\n  letter-spacing: -0.02em;\n}\n.random-movie-year[_ngcontent-%COMP%] {\n  font-size: 1rem;\n  color: #a1a1a6;\n}\n.empty-state[_ngcontent-%COMP%] {\n  padding: 60px 20px;\n  text-align: center;\n  color: #a1a1a6;\n}\n.empty-state-icon[_ngcontent-%COMP%] {\n  font-size: 4rem;\n  margin-bottom: 20px;\n  opacity: 0.5;\n}\n.empty-state-text[_ngcontent-%COMP%] {\n  font-size: 1.2rem;\n  font-weight: 400;\n}\n.loading[_ngcontent-%COMP%] {\n  display: inline-block;\n  width: 20px;\n  height: 20px;\n  border: 3px solid rgba(0, 113, 227, 0.3);\n  border-radius: 50%;\n  border-top-color: #0071e3;\n  animation: _ngcontent-%COMP%_spin 1s ease-in-out infinite;\n}\n@keyframes _ngcontent-%COMP%_spin {\n  to {\n    transform: rotate(360deg);\n  }\n}\nsection[_ngcontent-%COMP%] {\n  scroll-margin-top: 80px;\n}\n@media (max-width: 768px) {\n  .hero[_ngcontent-%COMP%]   h1[_ngcontent-%COMP%] {\n    font-size: 2.5rem;\n  }\n  .section[_ngcontent-%COMP%]   h2[_ngcontent-%COMP%] {\n    font-size: 2rem;\n  }\n  .results[_ngcontent-%COMP%] {\n    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));\n    gap: 20px;\n  }\n  .nav[_ngcontent-%COMP%] {\n    padding: 12px 4%;\n  }\n  .nav[_ngcontent-%COMP%]   nav[_ngcontent-%COMP%] {\n    gap: 20px;\n  }\n}\n@media (max-width: 480px) {\n  .hero[_ngcontent-%COMP%] {\n    padding: 80px 20px 60px;\n  }\n  .hero[_ngcontent-%COMP%]   h1[_ngcontent-%COMP%] {\n    font-size: 2rem;\n  }\n  .section[_ngcontent-%COMP%] {\n    padding: 60px 20px;\n  }\n  .results[_ngcontent-%COMP%] {\n    grid-template-columns: 1fr;\n  }\n}\n/*# sourceMappingURL=movie-form.css.map */'] });
 };
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(MovieForm, [{
     type: Component,
-    args: [{ selector: "app-movie-form", standalone: false, template: `<!---<label for="name">Film Title: </label>
-<input id="name" type="text" [formControl]="name">
-
-<button (click)="getDetails()">Submit</button>
-
-
-<ul *ngIf="searchResults && searchResults.length > 0">
-    <li *ngFor="let item of searchResults">
-        {{ item.Title }}
-        <div *ngIf='item.Poster && item.Poster !== "N/A" '>
-            <img [src]="item.Poster"/>  
-        </div>
-    </li>
-</ul>
--->
-<body>
+    args: [{ selector: "app-movie-form", standalone: false, template: `<body>
 
   <!-- Navigation -->
   <header class="nav">
-    <div class="logo">\u{1F34F}</div>
+    <div class="logo">\u{1F37F}</div>
     <nav>
-      <a href="#">Test</a>
-      <!-- <a href="#">iPhone</a>
-      <a href="#">iPad</a>
-      <a href="#">Support</a> -->
+      <a href="#search">Search</a>
+      <a href="#top-rated">Top Rated</a>
+      <a href="#discover">Discover</a>
     </nav>
   </header>
 
   <!-- Hero Section -->
-  <section class="hero">
+  <section class="hero" id="search">
     <div class="container">
-      <h1>Movie & TV Show Database</h1>
+      <h1>FlickBase</h1>
+      <p>Discover your next favorite film or series</p>
       <div class="input-group">
-        <input id="name" type="text" [formControl]="name" placeholder="Enter Movie/TV Show Title">
+        <div class="search-container">
+          <input id="name" type="text" [formControl]="name" placeholder="Search for movies or TV shows..." 
+                 (keydown)="onKeyDown($event)">
+          <button class="btn-clear" *ngIf="name.value" (click)="clearSearch()" title="Clear search">\xD7</button>
+        </div>
       </div>
-      <!-- <p>The most powerful device we've ever created.</p> -->
-      <button style="margin-top: 15px" class="btn" (click)="search()">Search</button>
-      <!-- <a href="#" class="btn">Learn More</a> -->
+      <button class="btn" (click)="search()">Search</button>
     </div>
   </section>
 
-  <!-- Features (Gray Block) -->
-  <section class="section gray">
+  <!-- Search Results -->
+  <section class="section gray" *ngIf="searchResults && searchResults.length > 0">
     <div class="container">
-      <h2>A curated list of results</h2>
-      <!-- <div class="features">
-        <div class="feature">
-          <h3>Ultra Performance</h3>
-          <p>Equipped with the latest chip to handle anything you throw at it.</p>
+      <h2>Search Results</h2>
+      <p>{{ filteredResults.length }} result{{ filteredResults.length !== 1 ? 's' : '' }} found</p>
+      
+      <!-- Filters -->
+      <div class="filters">
+        <div class="filter-group">
+          <label for="genre-filter">Genre:</label>
+          <select id="genre-filter" [(ngModel)]="selectedGenre" (change)="onGenreChange()" class="filter-select">
+            <option value="">All Genres</option>
+            <option *ngFor="let genre of allGenres" [value]="genre">{{ genre }}</option>
+          </select>
         </div>
-        <div class="feature">
-          <h3>All-day Battery</h3>
-          <p>Power that keeps up with your lifestyle, no matter where you go.</p>
+        
+        <div class="filter-group">
+          <label for="decade-filter">Decade:</label>
+          <select id="decade-filter" [(ngModel)]="selectedDecade" (change)="onDecadeChange()" class="filter-select">
+            <option value="">All Decades</option>
+            <option *ngFor="let decade of getDecades()" [value]="decade">{{ decade }}s</option>
+          </select>
         </div>
-        <div class="feature">
-          <h3>Pro Camera</h3>
-          <p>Crystal-clear quality in every photo, from daylight to night mode.</p>
+        
+        <div class="filter-group">
+          <label for="sort-filter">Sort by:</label>
+          <select id="sort-filter" [(ngModel)]="sortBy" (change)="onSortChange()" class="filter-select">
+            <option value="title">Title (A-Z)</option>
+            <option value="year">Year (Newest First)</option>
+          </select>
         </div>
-      </div> -->
-      <div class="results" *ngIf="searchResults && searchResults.length > 0">
-        <div *ngFor="let item of searchResults">
-            <p>{{ item.title }} - {{ item.year }}</p>
-            <div *ngIf='item.thumbnail'>
-                <img [src]="item.thumbnail"/>  
+      </div>
+      
+      <div class="results">
+        <div class="movie-card" *ngFor="let item of filteredResults">
+          <img *ngIf="item.thumbnail" [src]="item.thumbnail" [alt]="item.title" class="movie-card-image" 
+               onerror="this.style.display='none'">
+          <div class="movie-card-content">
+            <div class="movie-card-title">{{ item.title }}</div>
+            <div class="movie-card-year">{{ item.year }}</div>
+            <div class="movie-card-platform" *ngIf="item.genres && item.genres.length > 0">
+              {{ item.genres.join(', ') }}
             </div>
+          </div>
         </div>
+      </div>
     </div>
+  </section>
+  
+  <!-- No Results Message -->
+  <section class="section gray" *ngIf="name.value && searchResults.length === 0">
+    <div class="container">
+      <div class="empty-state">
+        <div class="empty-state-icon">\u{1F50D}</div>
+        <div class="empty-state-text">No results found for "{{ name.value }}"</div>
+        <button class="btn secondary" (click)="clearSearch()" style="margin-top: 20px;">Clear Search</button>
+      </div>
     </div>
   </section>
 
-  <!-- Product Showcase -->
-  <section class="section showcase">
+  <!-- Top Rated Section -->
+  <section class="section showcase" id="top-rated">
     <div class="container">
-      <!-- <img src="https://www.apple.com/v/iphone/home/bo/images/meta/iphone__ky2k6x5u6vue_og.png" alt="Product Image"> -->
       <h2>Top Rated</h2>
-      <p>All Streaming Services</p>
+      <p>Most watched across all streaming services</p>
       <div class="results" *ngIf="topRated && topRated.length > 0">
-        <div *ngFor="let item of topRated">
-            <p>{{ item.title }} - {{ item.platform }}</p>
-            <p>Minutes Viewed: {{ item.minutes_viewed_billions }} (Billion)</p>
-            <div *ngIf='item.thumbnail'>
-                <img [src]="item.thumbnail"/>  
+        <div class="movie-card" *ngFor="let item of topRated">
+          <img *ngIf="item.thumbnail" [src]="item.thumbnail" [alt]="item.title" class="movie-card-image"
+               onerror="this.style.display='none'">
+          <div class="movie-card-content">
+            <div class="movie-card-title">{{ item.title }}</div>
+            <div class="movie-card-platform">{{ item.platform }}</div>
+            <div class="movie-card-stats">
+              {{ item.minutes_viewed_billions }}B minutes viewed
             </div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Ecosystem (Gray Block) -->
-  <section class="section gray">
+  <!-- Random Movie Section -->
+  <section class="section gray" id="discover">
     <div class="container">
-      <h2 style="margin-bottom: 10px;">Unsure?</h2>
-      <button class="btn secondary" style="margin-bottom: 10px" (click)="getRandomMovie()">Random Suggestion</button>
-      <!-- <ul class="benefits">
-        <li>Seamless integration across all your Apple devices</li>
-        <li>Privacy and security built in</li>
-        <li>Support that actually supports</li>
-      </ul> -->
-      <div *ngIf="randomMovie">
-        <p style="font-size: 20px;">{{ randomMovie.title }} - {{ randomMovie.year }}</p>
-        <div *ngIf='randomMovie.thumbnail'>
-            <img [src]="randomMovie.thumbnail"/>  
-        </div>   
-      </div>   
+      <h2>Not sure what to watch?</h2>
+      <p>Let us surprise you with a random pick</p>
+      <button class="btn secondary" (click)="getRandomMovie()">Get Random Suggestion</button>
+      <div class="random-movie-container" *ngIf="randomMovie">
+        <div class="random-movie-card">
+          <img *ngIf="randomMovie.thumbnail" [src]="randomMovie.thumbnail" [alt]="randomMovie.title" 
+               class="random-movie-image" onerror="this.style.display='none'">
+          <div class="random-movie-info">
+            <div class="random-movie-title">{{ randomMovie.title }}</div>
+            <div class="random-movie-year">{{ randomMovie.year }}</div>
+            <div class="movie-card-platform" *ngIf="randomMovie.genres && randomMovie.genres.length > 0" 
+                 style="margin-top: 12px;">
+              {{ randomMovie.genres.join(' \u2022 ') }}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -44890,7 +45411,7 @@ var MovieForm = class _MovieForm {
   </footer>
 
 </body>
-`, styles: ['/* src/app/movie-form/movie-form.css */\n* {\n  margin: 0;\n  padding: 0;\n  box-sizing: border-box;\n}\nbody {\n  font-family:\n    -apple-system,\n    BlinkMacSystemFont,\n    "Segoe UI",\n    Roboto,\n    Helvetica,\n    Arial,\n    sans-serif;\n  color: #1d1d1f;\n  background-color: #fff;\n}\na {\n  text-decoration: none;\n  color: inherit;\n}\n.container {\n  width: 90%;\n  max-width: 1200px;\n  margin: 0 auto;\n}\n.nav {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 20px 5%;\n  background-color: #f8f8f8;\n  border-bottom: 1px solid #e5e5e5;\n}\n.nav a {\n  margin-left: 20px;\n  font-weight: 500;\n}\n.hero {\n  padding: 100px 20px;\n  text-align: center;\n  background-color: #fff;\n}\n.hero h1 {\n  font-size: 3rem;\n  margin-bottom: 20px;\n}\n.hero p {\n  font-size: 1.2rem;\n  color: #555;\n  margin-bottom: 30px;\n}\n.btn {\n  padding: 12px 28px;\n  background-color: #0071e3;\n  color: white;\n  border-radius: 30px;\n  font-weight: 500;\n  font-size: 17px;\n  border: 1px solid;\n}\n.btn.secondary {\n  background-color: transparent;\n  color: #0071e3;\n  border: 1px solid #0071e3;\n}\n.section {\n  padding: 80px 20px;\n  text-align: center;\n}\n.gray {\n  background-color: #f5f5f7;\n}\n.features {\n  display: flex;\n  flex-direction: column;\n  gap: 40px;\n  margin-top: 40px;\n}\n.feature h3 {\n  font-size: 1.5rem;\n  margin-bottom: 10px;\n}\n.feature p {\n  color: #666;\n}\n@media (min-width: 768px) {\n  .features {\n    flex-direction: row;\n    justify-content: space-between;\n  }\n}\n.showcase img {\n  max-width: 100%;\n  height: auto;\n  margin-bottom: 30px;\n}\n.showcase h2 {\n  font-size: 2rem;\n  margin-bottom: 15px;\n}\n.showcase p {\n  color: #555;\n  margin-bottom: 25px;\n}\n.benefits {\n  list-style: none;\n  font-size: 1.1rem;\n  color: #444;\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 0;\n}\n.benefits li {\n  margin-bottom: 15px;\n}\nfooter {\n  background-color: #fafafa;\n  padding: 40px 0;\n  text-align: center;\n  font-size: 0.9rem;\n  color: #888;\n}\n.input-group {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  margin-top: 40px;\n}\n.input-group label {\n  font-size: 1rem;\n  margin-bottom: 8px;\n  color: #333;\n}\n.input-group input {\n  width: 100%;\n  max-width: 400px;\n  padding: 14px 16px;\n  font-size: 1rem;\n  border: 1px solid #ccc;\n  border-radius: 12px;\n  background-color: #f5f5f7;\n  transition: border-color 0.2s ease, box-shadow 0.2s ease;\n}\n.input-group input:focus {\n  outline: none;\n  border-color: #0071e3;\n  box-shadow: 0 0 0 2px rgba(0, 113, 227, 0.2);\n}\n.results {\n  display: flex;\n  margin-top: 15px;\n  font-size: 20px;\n  flex-wrap: wrap;\n  justify-content: space-between;\n}\n/*# sourceMappingURL=movie-form.css.map */\n'] }]
+`, styles: ['/* src/app/movie-form/movie-form.css */\n* {\n  margin: 0;\n  padding: 0;\n  box-sizing: border-box;\n}\nbody {\n  font-family:\n    -apple-system,\n    BlinkMacSystemFont,\n    "SF Pro Display",\n    "SF Pro Text",\n    "Segoe UI",\n    Roboto,\n    Helvetica,\n    Arial,\n    sans-serif;\n  color: #1d1d1f;\n  background-color: #000000;\n  line-height: 1.47059;\n  font-weight: 400;\n  letter-spacing: -0.022em;\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n  margin: 0;\n  padding: 0;\n}\na {\n  text-decoration: none;\n  color: inherit;\n  transition: opacity 0.3s ease;\n}\na:hover {\n  opacity: 0.7;\n}\n.container {\n  width: 90%;\n  max-width: 1200px;\n  margin: 0 auto;\n}\n.nav {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 12px 5%;\n  background-color: rgba(0, 0, 0, 0.8);\n  backdrop-filter: saturate(180%) blur(20px);\n  -webkit-backdrop-filter: saturate(180%) blur(20px);\n  border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);\n  position: sticky;\n  top: 0;\n  left: 0;\n  right: 0;\n  z-index: 1000;\n  transition: background-color 0.3s ease;\n  margin: 0;\n}\n.nav:hover {\n  background-color: rgba(0, 0, 0, 0.95);\n}\n.logo {\n  font-size: 24px;\n  font-weight: 600;\n  cursor: pointer;\n  transition: transform 0.2s ease;\n}\n.logo:hover {\n  transform: scale(1.1);\n}\n.nav nav {\n  display: flex;\n  gap: 30px;\n}\n.nav a {\n  font-size: 12px;\n  font-weight: 400;\n  color: #f5f5f7;\n  letter-spacing: -0.01em;\n  transition: opacity 0.2s ease;\n  position: relative;\n}\n.nav a::after {\n  content: "";\n  position: absolute;\n  bottom: -4px;\n  left: 0;\n  width: 0;\n  height: 1px;\n  background-color: #f5f5f7;\n  transition: width 0.3s ease;\n}\n.nav a:hover::after {\n  width: 100%;\n}\n.hero {\n  padding: 120px 20px 100px;\n  text-align: center;\n  background:\n    linear-gradient(\n      to bottom,\n      #000000 0%,\n      #1a1a1a 100%);\n}\n.hero h1 {\n  font-size: 4rem;\n  font-weight: 600;\n  letter-spacing: -0.03em;\n  margin-bottom: 10px;\n  color: #f5f5f7;\n  animation: fadeInUp 0.8s ease-out;\n}\n.hero p {\n  font-size: 1.4rem;\n  color: #a1a1a6;\n  margin-bottom: 50px;\n  font-weight: 400;\n  animation: fadeInUp 0.8s ease-out 0.2s both;\n}\n@keyframes fadeInUp {\n  from {\n    opacity: 0;\n    transform: translateY(20px);\n  }\n  to {\n    opacity: 1;\n    transform: translateY(0);\n  }\n}\n.btn {\n  padding: 14px 32px;\n  background-color: #0071e3;\n  color: white;\n  border-radius: 980px;\n  font-weight: 400;\n  font-size: 17px;\n  border: none;\n  cursor: pointer;\n  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);\n  letter-spacing: -0.01em;\n  display: inline-block;\n  position: relative;\n  overflow: hidden;\n}\n.btn::before {\n  content: "";\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  width: 0;\n  height: 0;\n  border-radius: 50%;\n  background: rgba(255, 255, 255, 0.3);\n  transform: translate(-50%, -50%);\n  transition: width 0.6s, height 0.6s;\n}\n.btn:hover::before {\n  width: 300px;\n  height: 300px;\n}\n.btn:hover {\n  background-color: #0077ed;\n  transform: translateY(-2px);\n  box-shadow: 0 8px 20px rgba(0, 113, 227, 0.3);\n}\n.btn:active {\n  transform: translateY(0);\n  box-shadow: 0 4px 12px rgba(0, 113, 227, 0.2);\n}\n.btn.secondary {\n  background-color: transparent;\n  color: #0071e3;\n  border: 1px solid #0071e3;\n}\n.btn.secondary:hover {\n  background-color: rgba(0, 113, 227, 0.1);\n  box-shadow: 0 8px 20px rgba(0, 113, 227, 0.15);\n}\n.section {\n  padding: 100px 20px;\n  text-align: center;\n}\n.section h2 {\n  font-size: 3rem;\n  font-weight: 600;\n  letter-spacing: -0.03em;\n  margin-bottom: 10px;\n  color: #f5f5f7;\n}\n.section p {\n  font-size: 1.2rem;\n  color: #a1a1a6;\n  margin-bottom: 50px;\n}\n.gray {\n  background-color: #1a1a1a;\n}\n.features {\n  display: flex;\n  flex-direction: column;\n  gap: 40px;\n  margin-top: 40px;\n}\n.feature h3 {\n  font-size: 1.5rem;\n  margin-bottom: 10px;\n  font-weight: 600;\n}\n.feature p {\n  color: #a1a1a6;\n  font-size: 1.1rem;\n}\n@media (min-width: 768px) {\n  .features {\n    flex-direction: row;\n    justify-content: space-between;\n  }\n}\n.showcase img {\n  max-width: 100%;\n  height: auto;\n  margin-bottom: 30px;\n  border-radius: 12px;\n}\n.showcase {\n  background-color: #000000;\n}\n.showcase h2 {\n  font-size: 3rem;\n  font-weight: 600;\n  letter-spacing: -0.03em;\n  margin-bottom: 10px;\n  color: #f5f5f7;\n}\n.showcase p {\n  color: #a1a1a6;\n  font-size: 1.2rem;\n  margin-bottom: 50px;\n}\n.benefits {\n  list-style: none;\n  font-size: 1.1rem;\n  color: #f5f5f7;\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 0;\n}\n.benefits li {\n  margin-bottom: 15px;\n  line-height: 1.6;\n}\nfooter {\n  background-color: #1a1a1a;\n  padding: 50px 0;\n  text-align: center;\n  font-size: 0.9rem;\n  color: #a1a1a6;\n  border-top: 0.5px solid rgba(255, 255, 255, 0.1);\n}\n.input-group {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  margin-top: 50px;\n  animation: fadeInUp 0.8s ease-out 0.4s both;\n}\n.input-group label {\n  font-size: 1rem;\n  margin-bottom: 8px;\n  color: #1d1d1f;\n  font-weight: 500;\n}\n.input-group input {\n  width: 100%;\n  max-width: 500px;\n  padding: 16px 20px;\n  font-size: 17px;\n  border: 1px solid rgba(255, 255, 255, 0.2);\n  border-radius: 12px;\n  background-color: rgba(255, 255, 255, 0.1);\n  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);\n  color: #f5f5f7;\n  font-weight: 400;\n  letter-spacing: -0.01em;\n}\n.input-group input::placeholder {\n  color: #a1a1a6;\n}\n.input-group input:focus {\n  outline: none;\n  border-color: #0071e3;\n  box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.25);\n  background-color: rgba(255, 255, 255, 0.15);\n  transform: translateY(-2px);\n}\n.input-group input:hover {\n  border-color: rgba(255, 255, 255, 0.3);\n  background-color: rgba(255, 255, 255, 0.12);\n}\n.input-group + .btn {\n  margin-top: 10px;\n}\n.search-container {\n  position: relative;\n  width: 100%;\n  max-width: 500px;\n  margin: 0 auto;\n}\n.btn-clear {\n  position: absolute;\n  right: 12px;\n  top: 50%;\n  transform: translateY(-50%);\n  background: transparent;\n  border: none;\n  color: #a1a1a6;\n  font-size: 24px;\n  cursor: pointer;\n  padding: 0;\n  width: 30px;\n  height: 30px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: 50%;\n  transition: all 0.2s ease;\n}\n.btn-clear:hover {\n  background-color: rgba(255, 255, 255, 0.1);\n  color: #f5f5f7;\n}\n.filters {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 20px;\n  justify-content: center;\n  margin-bottom: 40px;\n  padding: 20px;\n  background-color: rgba(255, 255, 255, 0.05);\n  border-radius: 12px;\n  border: 0.5px solid rgba(255, 255, 255, 0.1);\n}\n.filter-group {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  min-width: 150px;\n}\n.filter-group label {\n  font-size: 0.9rem;\n  color: #a1a1a6;\n  font-weight: 500;\n}\n.filter-select {\n  padding: 10px 14px;\n  font-size: 15px;\n  border: 1px solid rgba(255, 255, 255, 0.2);\n  border-radius: 8px;\n  background-color: rgba(255, 255, 255, 0.1);\n  color: #f5f5f7;\n  cursor: pointer;\n  transition: all 0.3s ease;\n  font-family: inherit;\n}\n.filter-select:hover {\n  border-color: rgba(255, 255, 255, 0.3);\n  background-color: rgba(255, 255, 255, 0.12);\n}\n.filter-select:focus {\n  outline: none;\n  border-color: #0071e3;\n  box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.2);\n  background-color: rgba(255, 255, 255, 0.15);\n}\n.filter-select option {\n  background-color: #1a1a1a;\n  color: #f5f5f7;\n}\n.results {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));\n  gap: 30px;\n  margin-top: 50px;\n  padding: 0;\n}\n.movie-card {\n  background: #1a1a1a;\n  border-radius: 18px;\n  overflow: hidden;\n  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);\n  border: 0.5px solid rgba(255, 255, 255, 0.1);\n  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);\n  cursor: pointer;\n  position: relative;\n  animation: fadeInUp 0.6s ease-out both;\n}\n.movie-card:nth-child(1) {\n  animation-delay: 0.1s;\n}\n.movie-card:nth-child(2) {\n  animation-delay: 0.2s;\n}\n.movie-card:nth-child(3) {\n  animation-delay: 0.3s;\n}\n.movie-card:nth-child(4) {\n  animation-delay: 0.4s;\n}\n.movie-card:nth-child(5) {\n  animation-delay: 0.5s;\n}\n.movie-card:nth-child(6) {\n  animation-delay: 0.6s;\n}\n.movie-card:hover {\n  transform: translateY(-8px) scale(1.02);\n  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8);\n  border-color: rgba(255, 255, 255, 0.2);\n  background: #242424;\n}\n.movie-card-image {\n  width: 100%;\n  aspect-ratio: 2/3;\n  object-fit: cover;\n  display: block;\n  background:\n    linear-gradient(\n      135deg,\n      #1a1a1a 0%,\n      #2a2a2a 100%);\n}\n.movie-card-content {\n  padding: 20px;\n}\n.movie-card-title {\n  font-size: 1.1rem;\n  font-weight: 600;\n  color: #f5f5f7;\n  margin-bottom: 8px;\n  letter-spacing: -0.01em;\n  line-height: 1.3;\n}\n.movie-card-year {\n  font-size: 0.9rem;\n  color: #a1a1a6;\n  font-weight: 400;\n}\n.movie-card-platform {\n  font-size: 0.85rem;\n  color: #a1a1a6;\n  margin-top: 4px;\n  font-weight: 400;\n}\n.movie-card-stats {\n  font-size: 0.85rem;\n  color: #0071e3;\n  margin-top: 8px;\n  font-weight: 500;\n}\n.random-movie-container {\n  margin-top: 40px;\n  animation: fadeInUp 0.8s ease-out;\n}\n.random-movie-card {\n  max-width: 400px;\n  margin: 0 auto;\n  background: #1a1a1a;\n  border-radius: 18px;\n  overflow: hidden;\n  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);\n  border: 0.5px solid rgba(255, 255, 255, 0.1);\n  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);\n}\n.random-movie-card:hover {\n  transform: translateY(-4px);\n  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8);\n  border-color: rgba(255, 255, 255, 0.2);\n  background: #242424;\n}\n.random-movie-image {\n  width: 100%;\n  aspect-ratio: 2/3;\n  object-fit: cover;\n  display: block;\n  background:\n    linear-gradient(\n      135deg,\n      #1a1a1a 0%,\n      #2a2a2a 100%);\n}\n.random-movie-info {\n  padding: 24px;\n  text-align: center;\n}\n.random-movie-title {\n  font-size: 1.4rem;\n  font-weight: 600;\n  color: #f5f5f7;\n  margin-bottom: 8px;\n  letter-spacing: -0.02em;\n}\n.random-movie-year {\n  font-size: 1rem;\n  color: #a1a1a6;\n}\n.empty-state {\n  padding: 60px 20px;\n  text-align: center;\n  color: #a1a1a6;\n}\n.empty-state-icon {\n  font-size: 4rem;\n  margin-bottom: 20px;\n  opacity: 0.5;\n}\n.empty-state-text {\n  font-size: 1.2rem;\n  font-weight: 400;\n}\n.loading {\n  display: inline-block;\n  width: 20px;\n  height: 20px;\n  border: 3px solid rgba(0, 113, 227, 0.3);\n  border-radius: 50%;\n  border-top-color: #0071e3;\n  animation: spin 1s ease-in-out infinite;\n}\n@keyframes spin {\n  to {\n    transform: rotate(360deg);\n  }\n}\nsection {\n  scroll-margin-top: 80px;\n}\n@media (max-width: 768px) {\n  .hero h1 {\n    font-size: 2.5rem;\n  }\n  .section h2 {\n    font-size: 2rem;\n  }\n  .results {\n    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));\n    gap: 20px;\n  }\n  .nav {\n    padding: 12px 4%;\n  }\n  .nav nav {\n    gap: 20px;\n  }\n}\n@media (max-width: 480px) {\n  .hero {\n    padding: 80px 20px 60px;\n  }\n  .hero h1 {\n    font-size: 2rem;\n  }\n  .section {\n    padding: 60px 20px;\n  }\n  .results {\n    grid-template-columns: 1fr;\n  }\n}\n/*# sourceMappingURL=movie-form.css.map */\n'] }]
   }], () => [{ type: HttpClient }], null);
 })();
 (() => {
@@ -44931,7 +45452,8 @@ var AppModule = class _AppModule {
   ], imports: [
     BrowserModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule
   ] });
 };
 (() => {
@@ -44945,7 +45467,8 @@ var AppModule = class _AppModule {
       imports: [
         BrowserModule,
         AppRoutingModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        FormsModule
       ],
       providers: [
         provideBrowserGlobalErrorListeners(),

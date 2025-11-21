@@ -1,0 +1,337 @@
+[
+  {
+    "title": "Lost",
+    "year": 2004,
+    "cast": [
+      "Jorge Garcia",
+      "Josh Holloway",
+      "Yunjin Kim",
+      "Evangeline Lilly",
+      "Terry O'Quinn",
+      "Naveen Andrews"
+    ],
+    "genres": [
+      "Drama",
+      "Adventure",
+      "Mystery",
+      "Science fiction"
+    ],
+    "href": "Lost_(TV_series)",
+    "extract": "Lost is an American drama television series that originally aired on ABC from September 22, 2004, to May 23, 2010, over six seasons, comprising a total of 121 episodes. The show contains elements of supernatural and science fiction, and follows the survivors of a commercial jet airliner flying between Sydney and Los Angeles, after the plane crashes on a mysterious island somewhere in the South Pacific Ocean.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/8/8e/Lost_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "The Sopranos",
+    "year": 1999,
+    "cast": [
+      "James Gandolfini",
+      "Lorraine Bracco",
+      "Edie Falco",
+      "Michael Imperioli",
+      "Dominic Chianese",
+      "Steven Van Zandt"
+    ],
+    "genres": [
+      "Crime",
+      "Drama",
+      "Black comedy"
+    ],
+    "href": "The_Sopranos",
+    "extract": "The Sopranos is an American crime drama television series created by David Chase. The series revolves around Tony Soprano, a New Jersey-based Italian-American mobster, who struggles to balance his family life with his role as the leader of a criminal organization.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/9/9a/The_Sopranos_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "24",
+    "year": 2001,
+    "cast": [
+      "Kiefer Sutherland",
+      "Mary Lynn Rajskub",
+      "Carlos Bernard",
+      "Reiko Aylesworth",
+      "Elisha Cuthbert",
+      "Dennis Haysbert"
+    ],
+    "genres": [
+      "Action",
+      "Thriller",
+      "Drama",
+      "Crime"
+    ],
+    "href": "24_(TV_series)",
+    "extract": "24 is an American action thriller television series created by Joel Surnow and Robert Cochran for Fox. The series stars Kiefer Sutherland as Jack Bauer, the director of field operations for the Los Angeles–based Counter Terrorist Unit, who tries to save the country from various terrorist threats.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/4/4a/24_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Battlestar Galactica",
+    "year": 2004,
+    "cast": [
+      "Edward James Olmos",
+      "Mary McDonnell",
+      "Katee Sackhoff",
+      "Jamie Bamber",
+      "James Callis",
+      "Tricia Helfer"
+    ],
+    "genres": [
+      "Science fiction",
+      "Drama",
+      "Military science fiction"
+    ],
+    "href": "Battlestar_Galactica_(2004_TV_series)",
+    "extract": "Battlestar Galactica is an American military science fiction television series, and part of the Battlestar Galactica franchise. The show was developed by Ronald D. Moore as a re-imagining of the 1978 Battlestar Galactica television series.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/9/9e/Battlestar_Galactica_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "The Wire",
+    "year": 2002,
+    "cast": [
+      "Dominic West",
+      "Lance Reddick",
+      "Sonja Sohn",
+      "Wendell Pierce",
+      "Idris Elba",
+      "Michael K. Williams"
+    ],
+    "genres": [
+      "Crime",
+      "Drama",
+      "Thriller"
+    ],
+    "href": "The_Wire",
+    "extract": "The Wire is an American crime drama television series created and primarily written by author and former police reporter David Simon. The series was broadcast by the cable network HBO in the United States.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/8/8a/The_Wire_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Arrested Development",
+    "year": 2003,
+    "cast": [
+      "Jason Bateman",
+      "Portia de Rossi",
+      "Will Arnett",
+      "Michael Cera",
+      "Alia Shawkat",
+      "Tony Hale"
+    ],
+    "genres": [
+      "Comedy",
+      "Sitcom"
+    ],
+    "href": "Arrested_Development_(TV_series)",
+    "extract": "Arrested Development is an American sitcom television series created by Mitchell Hurwitz, which originally aired on Fox for three seasons from November 2, 2003, to February 10, 2006. The show follows the Bluth family, a formerly wealthy and habitually dysfunctional family.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/4/4a/Arrested_Development_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Dexter",
+    "year": 2006,
+    "cast": [
+      "Michael C. Hall",
+      "Jennifer Carpenter",
+      "David Zayas",
+      "James Remar",
+      "C. S. Lee",
+      "Lauren Vélez"
+    ],
+    "genres": [
+      "Crime",
+      "Drama",
+      "Mystery",
+      "Thriller"
+    ],
+    "href": "Dexter_(TV_series)",
+    "extract": "Dexter is an American crime drama mystery television series that aired on Showtime from October 1, 2006, to September 22, 2013. The series centers on Dexter Morgan, a blood spatter pattern analyst for the Miami Metro Police Department who also leads a secret life as a vigilante serial killer.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/8/8e/Dexter_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Buffy the Vampire Slayer",
+    "year": 1997,
+    "cast": [
+      "Sarah Michelle Gellar",
+      "Nicholas Brendon",
+      "Alyson Hannigan",
+      "Charisma Carpenter",
+      "Anthony Stewart Head",
+      "David Boreanaz"
+    ],
+    "genres": [
+      "Supernatural",
+      "Drama",
+      "Horror",
+      "Comedy"
+    ],
+    "href": "Buffy_the_Vampire_Slayer",
+    "extract": "Buffy the Vampire Slayer is an American supernatural drama television series created by writer-director Joss Whedon under his production tag, Mutant Enemy Productions, with later co-executive producers being Jane Espenson, David Fury, David Greenwalt, Doug Petrie, Marti Noxon, and David Solomon.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/9/9a/Buffy_the_Vampire_Slayer_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Friends",
+    "year": 1994,
+    "cast": [
+      "Jennifer Aniston",
+      "Courteney Cox",
+      "Lisa Kudrow",
+      "Matt LeBlanc",
+      "Matthew Perry",
+      "David Schwimmer"
+    ],
+    "genres": [
+      "Comedy",
+      "Sitcom"
+    ],
+    "href": "Friends",
+    "extract": "Friends is an American television sitcom created by David Crane and Marta Kauffman, which aired on NBC from September 22, 1994, to May 6, 2004, lasting ten seasons. With an ensemble cast starring Jennifer Aniston, Courteney Cox, Lisa Kudrow, Matt LeBlanc, Matthew Perry, and David Schwimmer, the show revolves around six friends in their 20s and 30s who live in Manhattan, New York City.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/0/0b/Friends_logo.svg",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "The X-Files",
+    "year": 1993,
+    "cast": [
+      "David Duchovny",
+      "Gillian Anderson",
+      "Mitch Pileggi",
+      "Robert Patrick",
+      "Annabeth Gish"
+    ],
+    "genres": [
+      "Science fiction",
+      "Drama",
+      "Mystery",
+      "Horror"
+    ],
+    "href": "The_X-Files",
+    "extract": "The X-Files is an American science fiction drama television series created by Chris Carter. The original television series aired from September 10, 1993, to May 19, 2002, on Fox. The program spanned nine seasons, with 202 episodes.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/8/8a/The_X-Files_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Six Feet Under",
+    "year": 2001,
+    "cast": [
+      "Peter Krause",
+      "Michael C. Hall",
+      "Frances Conroy",
+      "Lauren Ambrose",
+      "Freddy Rodríguez",
+      "Mathew St. Patrick"
+    ],
+    "genres": [
+      "Drama",
+      "Comedy-drama",
+      "Black comedy"
+    ],
+    "href": "Six_Feet_Under_(TV_series)",
+    "extract": "Six Feet Under is an American drama television series created and produced by Alan Ball. It premiered on the premium cable network HBO in the United States on June 3, 2001, and ended on August 21, 2005, spanning five seasons and 63 episodes.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/9/9e/Six_Feet_Under_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "The Shield",
+    "year": 2002,
+    "cast": [
+      "Michael Chiklis",
+      "Catherine Dent",
+      "Reed Diamond",
+      "Walton Goggins",
+      "Michael Jace",
+      "Kenny Johnson"
+    ],
+    "genres": [
+      "Crime",
+      "Drama",
+      "Action"
+    ],
+    "href": "The_Shield",
+    "extract": "The Shield is an American crime drama television series starring Michael Chiklis that premiered on March 12, 2002, on FX and concluded on November 25, 2008, after seven seasons. The series was created and executive produced by Shawn Ryan.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/4/4a/The_Shield_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Veronica Mars",
+    "year": 2004,
+    "cast": [
+      "Kristen Bell",
+      "Enrico Colantoni",
+      "Jason Dohring",
+      "Percy Daggs III",
+      "Tina Majorino",
+      "Francis Capra"
+    ],
+    "genres": [
+      "Mystery",
+      "Drama",
+      "Crime",
+      "Teen drama"
+    ],
+    "href": "Veronica_Mars",
+    "extract": "Veronica Mars is an American teen noir mystery drama television series created by Rob Thomas. The series premiered on September 22, 2004, during television network UPN's final two years, and ended on May 22, 2007, after a season on UPN's successor, The CW, and three seasons total.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/8/8e/Veronica_Mars_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Prison Break",
+    "year": 2005,
+    "cast": [
+      "Wentworth Miller",
+      "Dominic Purcell",
+      "Sarah Wayne Callies",
+      "Amaury Nolasco",
+      "Robert Knepper",
+      "Wade Williams"
+    ],
+    "genres": [
+      "Action",
+      "Crime",
+      "Drama",
+      "Thriller"
+    ],
+    "href": "Prison_Break",
+    "extract": "Prison Break is an American action drama television series created by Paul Scheuring for Fox. The series revolves around two brothers, Lincoln Burrows and Michael Scofield. Burrows has been sentenced to death for a crime he did not commit, and Scofield devises an elaborate plan to help his brother escape prison.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/9/9a/Prison_Break_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Heroes",
+    "year": 2006,
+    "cast": [
+      "Hayden Panettiere",
+      "Milo Ventimiglia",
+      "Masi Oka",
+      "Ali Larter",
+      "Adrian Pasdar",
+      "Sendhil Ramamurthy"
+    ],
+    "genres": [
+      "Science fiction",
+      "Drama",
+      "Superhero"
+    ],
+    "href": "Heroes_(TV_series)",
+    "extract": "Heroes is an American superhero drama television series created by Tim Kring that aired on NBC for four seasons from September 25, 2006, to February 8, 2010. The series tells the stories of ordinary people who discover that they have superhuman abilities and how these abilities take effect in the characters' lives.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/4/4a/Heroes_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  }
+]
+

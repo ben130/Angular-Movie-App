@@ -1,0 +1,17 @@
+{
+  "movieFiles": [
+    "movies2020.json",
+    "movies-2010s.json",
+    "movies-2000s.json",
+    "movies-1990s.json",
+    "movies-1980s.json"
+  ],
+  "tvShowFiles": [
+    "tv-shows-2020s.json",
+    "tv-shows-2010s.json",
+    "tv-shows-2000s.json",
+    "tv-shows-1990s.json",
+    "tv-shows-1980s.json"
+  ]
+}
+

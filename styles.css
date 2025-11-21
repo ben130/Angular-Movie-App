@@ -1,3 +1,36 @@
 /* src/styles.css */
+html {
+  scroll-behavior: smooth;
+  margin: 0;
+  padding: 0;
+}
+body {
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+app-root {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+::-webkit-scrollbar-thumb {
+  background: #424245;
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #57575a;
+}
+::selection {
+  background-color: rgba(0, 113, 227, 0.3);
+  color: #f5f5f7;
+}
+
 /* angular:styles/global:styles */
 /*# sourceMappingURL=styles.css.map */

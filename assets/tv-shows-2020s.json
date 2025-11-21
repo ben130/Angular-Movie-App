@@ -1,0 +1,363 @@
+[
+  {
+    "title": "The Last of Us",
+    "year": 2023,
+    "cast": [
+      "Pedro Pascal",
+      "Bella Ramsey",
+      "Gabriel Luna",
+      "Anna Torv",
+      "Nick Offerman",
+      "Murray Bartlett"
+    ],
+    "genres": [
+      "Drama",
+      "Horror",
+      "Thriller",
+      "Post-apocalyptic"
+    ],
+    "href": "The_Last_of_Us_(TV_series)",
+    "extract": "The Last of Us is an American post-apocalyptic drama television series created by Craig Mazin and Neil Druckmann for HBO. Based on the 2013 video game developed by Naughty Dog, the series is set twenty years into a pandemic caused by a mass fungal infection, which causes its hosts to transform into zombie-like creatures and collapses society.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/4/46/The_Last_of_Us_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 225
+  },
+  {
+    "title": "The Crown",
+    "year": 2016,
+    "cast": [
+      "Claire Foy",
+      "Olivia Colman",
+      "Imelda Staunton",
+      "Matt Smith",
+      "Tobias Menzies",
+      "Jonathan Pryce"
+    ],
+    "genres": [
+      "Historical drama",
+      "Biographical"
+    ],
+    "href": "The_Crown_(TV_series)",
+    "extract": "The Crown is a historical drama television series about the reign of Queen Elizabeth II, created and principally written by Peter Morgan and produced by Left Bank Pictures and Sony Pictures Television for Netflix.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/0/0a/The_Crown_season_4.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 600
+  },
+  {
+    "title": "Stranger Things",
+    "year": 2016,
+    "cast": [
+      "Millie Bobby Brown",
+      "Finn Wolfhard",
+      "Gaten Matarazzo",
+      "Caleb McLaughlin",
+      "Noah Schnapp",
+      "Sadie Sink"
+    ],
+    "genres": [
+      "Science fiction",
+      "Horror",
+      "Supernatural",
+      "Drama"
+    ],
+    "href": "Stranger_Things",
+    "extract": "Stranger Things is an American science fiction horror drama television series created by the Duffer Brothers for Netflix. The show is set in the 1980s in the fictional town of Hawkins, Indiana, and follows a group of kids who encounter supernatural forces and secret government experiments.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/7/7a/Stranger_Things_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "The Mandalorian",
+    "year": 2019,
+    "cast": [
+      "Pedro Pascal",
+      "Gina Carano",
+      "Carl Weathers",
+      "Giancarlo Esposito",
+      "Werner Herzog",
+      "Nick Nolte"
+    ],
+    "genres": [
+      "Science fiction",
+      "Western",
+      "Space opera",
+      "Action"
+    ],
+    "href": "The_Mandalorian",
+    "extract": "The Mandalorian is an American space Western television series created by Jon Favreau for the streaming service Disney+. It is the first live-action series in the Star Wars franchise, beginning five years after the events of Return of the Jedi.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/9/9a/The_Mandalorian_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "The Boys",
+    "year": 2019,
+    "cast": [
+      "Karl Urban",
+      "Jack Quaid",
+      "Antony Starr",
+      "Erin Moriarty",
+      "Dominique McElligott",
+      "Laz Alonso"
+    ],
+    "genres": [
+      "Superhero",
+      "Action",
+      "Comedy",
+      "Drama",
+      "Satire"
+    ],
+    "href": "The_Boys_(TV_series)",
+    "extract": "The Boys is an American superhero television series developed by Eric Kripke for Amazon Prime Video. Based on the comic book of the same name by Garth Ennis and Darick Robertson, it follows the eponymous team of vigilantes as they combat superpowered individuals who abuse their abilities.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/0/0a/The_Boys_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Succession",
+    "year": 2018,
+    "cast": [
+      "Brian Cox",
+      "Jeremy Strong",
+      "Sarah Snook",
+      "Kieran Culkin",
+      "Alan Ruck",
+      "Nicholas Braun"
+    ],
+    "genres": [
+      "Drama",
+      "Satire",
+      "Black comedy"
+    ],
+    "href": "Succession_(TV_series)",
+    "extract": "Succession is an American satirical comedy-drama television series created by Jesse Armstrong that aired on HBO from June 3, 2018, to May 28, 2023. The series centers on the Roy family, the owners of global media and entertainment conglomerate Waystar RoyCo, and their fight for control of the company.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/5/5a/Succession_Logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "The Witcher",
+    "year": 2019,
+    "cast": [
+      "Henry Cavill",
+      "Anya Chalotra",
+      "Freya Allan",
+      "Joey Batey",
+      "MyAnna Buring",
+      "Royce Pierreson"
+    ],
+    "genres": [
+      "Fantasy",
+      "Drama",
+      "Action",
+      "Adventure"
+    ],
+    "href": "The_Witcher_(TV_series)",
+    "extract": "The Witcher is a fantasy drama streaming television series created by Lauren Schmidt Hissrich for Netflix. It is based on the book series of the same name by Polish writer Andrzej Sapkowski. The series follows Geralt of Rivia, a mutated monster-hunter for hire.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/9/9f/The_Witcher_TV_series_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Squid Game",
+    "year": 2021,
+    "cast": [
+      "Lee Jung-jae",
+      "Park Hae-soo",
+      "Wi Ha-joon",
+      "Jung Ho-yeon",
+      "O Yeong-su",
+      "Heo Sung-tae"
+    ],
+    "genres": [
+      "Survival",
+      "Thriller",
+      "Drama",
+      "Horror"
+    ],
+    "href": "Squid_Game",
+    "extract": "Squid Game is a South Korean survival drama television series created by Hwang Dong-hyuk for Netflix. The series revolves around a contest where 456 players, all of whom are in deep financial debt, risk their lives to play a series of deadly children's games for the chance to win a ₩45.6 billion prize.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/d/dd/Squid_Game.jpg",
+    "thumbnail_width": 400,
+    "thumbnail_height": 600
+  },
+  {
+    "title": "Wednesday",
+    "year": 2022,
+    "cast": [
+      "Jenna Ortega",
+      "Gwendoline Christie",
+      "Riki Lindhome",
+      "Jamie McShane",
+      "Hunter Doohan",
+      "Percy Hynes White"
+    ],
+    "genres": [
+      "Comedy",
+      "Horror",
+      "Supernatural",
+      "Mystery"
+    ],
+    "href": "Wednesday_(TV_series)",
+    "extract": "Wednesday is an American coming-of-age supernatural comedy horror television series based on the character Wednesday Addams from The Addams Family. Created by Alfred Gough and Miles Millar, it stars Jenna Ortega as the titular character.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/3/35/Wednesday_Netflix_series_poster.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 600
+  },
+  {
+    "title": "House of the Dragon",
+    "year": 2022,
+    "cast": [
+      "Paddy Considine",
+      "Matt Smith",
+      "Emma D'Arcy",
+      "Olivia Cooke",
+      "Rhys Ifans",
+      "Steve Toussaint"
+    ],
+    "genres": [
+      "Fantasy",
+      "Drama",
+      "Action"
+    ],
+    "href": "House_of_the_Dragon",
+    "extract": "House of the Dragon is an American fantasy drama television series created by George R. R. Martin and Ryan Condal for HBO. A prequel to Game of Thrones, it is the second show in the A Song of Ice and Fire franchise.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/1/11/House_of_the_Dragon_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Yellowjackets",
+    "year": 2021,
+    "cast": [
+      "Melanie Lynskey",
+      "Tawny Cypress",
+      "Christina Ricci",
+      "Juliette Lewis",
+      "Sophie Nélisse",
+      "Jasmin Savoy Brown"
+    ],
+    "genres": [
+      "Psychological horror",
+      "Drama",
+      "Mystery",
+      "Thriller"
+    ],
+    "href": "Yellowjackets_(TV_series)",
+    "extract": "Yellowjackets is an American psychological horror television series created by Ashley Lyle and Bart Nickerson. It tells the story of a team of high school girls soccer players who survive a plane crash in the remote Canadian wilderness and the events that follow their rescue.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/8/8a/Yellowjackets_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "The Bear",
+    "year": 2022,
+    "cast": [
+      "Jeremy Allen White",
+      "Ebon Moss-Bachrach",
+      "Ayo Edebiri",
+      "Lionel Boyce",
+      "Liza Colón-Zayas",
+      "Abby Elliott"
+    ],
+    "genres": [
+      "Comedy-drama",
+      "Dark comedy"
+    ],
+    "href": "The_Bear_(TV_series)",
+    "extract": "The Bear is an American comedy-drama television series created by Christopher Storer. It follows Carmen 'Carmy' Berzatto, a young chef from the fine dining world who comes home to Chicago to run his family's Italian beef sandwich shop.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/9/9a/The_Bear_TV_series_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Severance",
+    "year": 2022,
+    "cast": [
+      "Adam Scott",
+      "Zach Cherry",
+      "Britt Lower",
+      "Tramell Tillman",
+      "Jen Tullock",
+      "Dichen Lachman"
+    ],
+    "genres": [
+      "Science fiction",
+      "Thriller",
+      "Drama",
+      "Mystery"
+    ],
+    "href": "Severance_(TV_series)",
+    "extract": "Severance is an American science fiction psychological thriller television series created by Dan Erickson and directed by Ben Stiller and Aoife McArdle. It follows Mark Scout, an employee of Lumon Industries who agrees to a 'severance' procedure that separates his work and personal memories.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/4/4c/Severance_TV_series_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Only Murders in the Building",
+    "year": 2021,
+    "cast": [
+      "Steve Martin",
+      "Martin Short",
+      "Selena Gomez",
+      "Aaron Dominguez",
+      "Amy Ryan",
+      "Nathan Lane"
+    ],
+    "genres": [
+      "Comedy",
+      "Mystery",
+      "Crime"
+    ],
+    "href": "Only_Murders_in_the_Building",
+    "extract": "Only Murders in the Building is an American mystery-comedy television series created by Steve Martin and John Hoffman. The series follows three strangers who share an obsession with true crime and suddenly find themselves wrapped up in one.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/4/4a/Only_Murders_in_the_Building_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "Ted Lasso",
+    "year": 2020,
+    "cast": [
+      "Jason Sudeikis",
+      "Hannah Waddingham",
+      "Brendan Hunt",
+      "Jeremy Swift",
+      "Juno Temple",
+      "Brett Goldstein"
+    ],
+    "genres": [
+      "Comedy",
+      "Sports",
+      "Drama"
+    ],
+    "href": "Ted_Lasso",
+    "extract": "Ted Lasso is an American sports comedy-drama television series developed by Bill Lawrence, Jason Sudeikis, Joe Kelly, and Brendan Hunt. It follows Ted Lasso, an American college football coach who is hired to coach an English Premier League soccer team despite having no experience coaching soccer.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/8/8e/Ted_Lasso_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  },
+  {
+    "title": "The White Lotus",
+    "year": 2021,
+    "cast": [
+      "Murray Bartlett",
+      "Connie Britton",
+      "Jennifer Coolidge",
+      "Alexandra Daddario",
+      "Fred Hechinger",
+      "Jake Lacy"
+    ],
+    "genres": [
+      "Comedy-drama",
+      "Satire",
+      "Dark comedy"
+    ],
+    "href": "The_White_Lotus",
+    "extract": "The White Lotus is an American comedy-drama anthology television series created, written, and directed by Mike White. It follows the guests and employees of the fictional White Lotus resort chain, whose stay becomes affected by their various dysfunctions.",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/en/9/9e/The_White_Lotus_logo.png",
+    "thumbnail_width": 400,
+    "thumbnail_height": 200
+  }
+]
+
